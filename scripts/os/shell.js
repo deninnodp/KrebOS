@@ -79,6 +79,27 @@ function shellInit() {
     sc.description = "<string> - Sets the prompt.";
     sc.function = shellPrompt;
     this.commandList[this.commandList.length] = sc;
+    
+    // date
+    sc = new ShellCommand();
+    sc.command = "date";
+    sc.description = "- Displays the current date and time";
+    sc.function = shellDate;
+    this.commandList[this.commandList.length] = sc;
+    
+    // whereami
+    sc = new ShellCommand();
+    sc.command = "whereami";
+    sc.description = " - Displays the current user's location";
+    sc.function = shellWhere;
+    this.commandList[this.commandList.length] = sc;
+    
+    // flip <string>
+    sc = new ShellCommand();
+    sc.command = "flip";
+    sc.description = "<string> - Flips any string";
+    sc.function = shellFlip;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -360,4 +381,32 @@ function shellPrompt(args)
     {
         _StdIn.putText("Usage: prompt <string>  Please supply a string.");
     }
+}
+
+function shellDate()
+{
+	var currentTime = new Date();
+	_StdIn.putText("Current date and time: " + currentTime + "");
+	
+}
+
+function shellWhere()
+{
+	_StdIn.putText("You're traveling through another dimension, a dimension not only of sight and sound but of mind.");
+}
+
+function shellFlip(args)
+{
+	if (args.length > 0)
+		{
+		  var  stri = "";
+		  var  alen = args[0].length;
+		  for (var i = alen ; i > 0 ; i--){
+		        stri += args[0].charAt(i-1)
+		   }
+		  _StdIn.putText("" + stri + "");
+		}else
+			{
+				_StdIn.putText("Please choose a valid string");
+			}
 }

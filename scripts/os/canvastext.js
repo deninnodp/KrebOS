@@ -190,12 +190,27 @@ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
     return total;
 };
 
+CanvasTextFunctions.clearCharacter = function(ctx, x, y, size, chr)
+{
+
+  var mag = size / 25.0;
+  var letter = CanvasTextFunctions.letter(chr.charAt(0));
+  ctx.clearRect(x, y - _DefaultFontSize, letter.width*mag, _DefaultFontSize + _FontHeightMargin);
+};
+
+CanvasTextFunctions.clearLine = function(ctx, y)
+{
+  ctx.clearRect(0, y - _DefaultFontSize, _Canvas.width, _DefaultFontSize + _FontHeightMargin);
+};
+
 CanvasTextFunctions.enable = function(ctx) 
 {
     ctx.drawText = function(font,size,x,y,text) { return CanvasTextFunctions.draw( ctx, font,size,x,y,text); };
     ctx.measureText = function(font,size,text) { return CanvasTextFunctions.measure( font,size,text); };
     ctx.fontAscent = function(font,size) { return CanvasTextFunctions.ascent(font,size); };
     ctx.fontDescent = function(font,size) { return CanvasTextFunctions.descent(font,size); };
+    ctx.clearCharacter = function(x, y, size, chr) { return CanvasTextFunctions.clearCharacter(ctx, x, y, size, chr); };
+    ctx.clearLine = function(y) { return CanvasTextFunctions.clearLine(ctx, y); };
     ctx.drawTextRight = function(font,size,x,y,text) {  
 		var w = CanvasTextFunctions.measure(font,size,text);
 		return CanvasTextFunctions.draw( ctx, font,size,x-w,y,text); 
