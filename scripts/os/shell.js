@@ -141,6 +141,9 @@ function shellHandleInput(buffer)
     // 
     // Parse the input...
     //
+    historyarray[historyindex] = buffer;
+    historyindex++;
+    
     var userCommand = new UserCommand();
     userCommand = shellParseInput(buffer);
     // ... and assign the command and args to local variables.

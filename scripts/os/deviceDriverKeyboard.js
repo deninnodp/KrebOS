@@ -129,8 +129,10 @@ function krnKbdDispatchKeyPress(params)
     else if ( ((keyCode >= 48) && (keyCode <= 57)) ||   // digits 
                (keyCode == 32)                     ||   // space
                (keyCode == 13)                   ||   // enter
-               (keyCode == 8))                           //backspace
-    {
+               (keyCode == 8)   ||                        //backspace
+    			(keyCode == 38) ||
+    			(keyCode == 40))
+    	{
     	 chr = String.fromCharCode(keyCode);
         _KernelInputQueue.enqueue(chr); 
     }

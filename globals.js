@@ -72,7 +72,8 @@ var CLOCK_ENABLED = true;
 var currentdatetime = new Date();
 var counteri = 0;
 
-
+var historyarray = new Array();
+var historyindex = 0;
 
 // For testing...
 var _GLaDOS = null;

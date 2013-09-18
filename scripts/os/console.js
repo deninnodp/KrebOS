@@ -44,6 +44,7 @@ function CLIconsole() {
 		while (_KernelInputQueue.getSize() > 0) {
 			// Get the next character from the kernel input queue.
 			var chr = _KernelInputQueue.dequeue();
+			//krnTrace("HELLO");
 			// Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
 			if (chr == String.fromCharCode(13)) //     Enter key
 			{
@@ -65,6 +66,16 @@ function CLIconsole() {
 					this.removeLastChar(lastChar);
 
 				}
+			} else if (chr == String.fromCharCode(38)) {
+			    //arrow key up - command history up
+				historyindex--;
+				krnTrace(historyarray[historyindex]);
+				
+			
+			} else if (chr == String.fromCharCode(40)) {
+			    //arrow key down - command history down
+				
+			
 			} else {
 				// This is a "normal" character, so ...
 				// ... draw it on the screen...
