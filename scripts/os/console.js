@@ -48,6 +48,7 @@ function CLIconsole() {
 			// Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
 			if (chr == String.fromCharCode(13)) //     Enter key
 			{
+				krnTrace("LOOK HERE:" + this.buffer);
 				// The enter key marks the end of a console command, so ...
 				// ... tell the shell ...
 				_OsShell.handleInput(this.buffer);
@@ -68,14 +69,62 @@ function CLIconsole() {
 				}
 			} else if (chr == String.fromCharCode(38)) {
 			    //arrow key up - command history up
-				historyindex--;
+				
+				if (historyindex > 0)
+					{
+						historyindex--;
+					
+				this.buffer = "";
+				_DrawingContext.clearRect(0, 476, 500, 17);
+				this.CurrentXPosition = 0;
+				_StdIn.putText('>');
+				krnTrace("UP INDEX:" + historyindex);
+				
+				if (historyarray[historyindex] != undefined)
+				{
+					chararray = historyarray[historyindex].split('');
+					
+				}
+				
+
+					//krnTrace("LALA");
+					for(var i=0;i<chararray.length;i++)
+						{
+							//krnTrace(chararray[i]);
+							_KernelInputQueue.enqueue(chararray[i]);
+						}
+				
 				krnTrace(historyarray[historyindex]);
 				
-			
+					}
 			} else if (chr == String.fromCharCode(40)) {
 			    //arrow key down - command history down
+				if (historyindex < historyarray.length)
+				{
+					historyindex++;
 				
-			
+				this.buffer = "";
+				_DrawingContext.clearRect(0, 476, 500, 17);
+				this.CurrentXPosition = 0;
+				_StdIn.putText('>');
+				//krnTrace(historyarray[historyindex]);
+				krnTrace("DOWN INDEX:" + historyindex);
+				
+				if (historyarray[historyindex] != undefined)
+					{
+						chararray = historyarray[historyindex].split('');
+					}
+				
+				
+
+					for(var i=0;i<chararray.length;i++)
+						{
+							//krnTrace(chararray[i]);
+							_KernelInputQueue.enqueue(chararray[i]);
+						}
+					}
+				krnTrace(historyarray[historyindex]);
+				
 			} else {
 				// This is a "normal" character, so ...
 				// ... draw it on the screen...

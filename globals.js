@@ -74,6 +74,8 @@ var counteri = 0;
 
 var historyarray = new Array();
 var historyindex = 0;
+var chararray;
+var i=0;
 
 // For testing...
 var _GLaDOS = null;

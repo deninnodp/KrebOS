@@ -200,7 +200,8 @@ CanvasTextFunctions.clearCharacter = function(ctx, x, y, size, chr)
 
 CanvasTextFunctions.clearLine = function(ctx, y)
 {
-  ctx.clearRect(0, y - _DefaultFontSize, _Canvas.width, _DefaultFontSize + _FontHeightMargin);
+  ctx.clearRect(0, y - 13, 500, 17);
+  //krnTrace("YYUPP");
 };
 
 CanvasTextFunctions.enable = function(ctx) 
