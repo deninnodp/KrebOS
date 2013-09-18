@@ -100,7 +100,28 @@ function shellInit() {
     sc.description = "<string> - Flips any string";
     sc.function = shellFlip;
     this.commandList[this.commandList.length] = sc;
+    
+    // BSOD
+    sc = new ShellCommand();
+    sc.command = "bluescreen";
+    sc.description = "Causes the OS to bluescreen";
+    sc.function = shellBSOD;
+    this.commandList[this.commandList.length] = sc;
+    
+    // load
+    sc = new ShellCommand();
+    sc.command = "load";
+    sc.description = "Loads a user program from the program input textarea into memory.";
+    sc.function = shellLoad;
+    this.commandList[this.commandList.length] = sc;
 
+    // status
+    sc = new ShellCommand();
+    sc.command = "status";
+    sc.description = "- sets the status message on the taskbar";
+    sc.function = shellSetStatus;
+    this.commandList[this.commandList.length] = sc;
+    
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
 
@@ -402,7 +423,7 @@ function shellFlip(args)
 		  var  stri = "";
 		  var  alen = args[0].length;
 		  for (var i = alen ; i > 0 ; i--){
-		        stri += args[0].charAt(i-1)
+		        stri += args[0].charAt(i-1);
 		   }
 		  _StdIn.putText("" + stri + "");
 		}else
@@ -410,3 +431,62 @@ function shellFlip(args)
 				_StdIn.putText("Please choose a valid string");
 			}
 }
+
+function shellBSOD(args)
+{
+	krnTrapError("User evoked bluescreen command!");
+}
+
+function shellLoad(args)
+{
+	//This time around I wrote a much more robust checking program.
+	var input = document.getElementById("taProgramInput").value; //grab input
+	krnTrace(input);
+	input2 = input.replace(/\s/g,''); //remove spaces to make the regex cleaner/simpler
+	krnTrace(input2);
+	//this pattern will verify not only that the values are hex, but that they are
+	//in the right format: Opcode must be first, and will verify that the correct
+	//argument size is used after as well. 
+	var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
+    var result = patt.exec(input2);
+    krnTrace(result);
+    //if a valid program cannot be matched, ignore it.
+    if (result != input2)
+    	{
+    		krnTrace("User entered invalid program, disregarding.")
+    	}
+    //TODO:actually run these
+}
+
+
+function shellSetStatus(args)
+{
+	taskBarClearScreen();
+  var statusMessage = "";
+
+  // Concatenate all the arguments together
+  for (x in args) 
+  {
+      // statusMessage += ' ';
+
+    statusMessage += args[x] + " ";
+  }
+  this.statusMessage = statusMessage;
+
+  var currentTime = new Date();
+  var month = currentTime.getMonth() + 1;
+  var day = currentTime.getDate();
+  var year = currentTime.getFullYear();
+  var hours = currentTime.getHours();
+  var minutes = currentTime.getMinutes();
+  if (minutes < 10)
+  {
+	  minutes = "0" + minutes;
+  }
+  
+  
+  // Write the status
+  _TaskBar.putText("Status: " + month + "/" + day + "/" + year + " " + hours + ":" + minutes + " " + statusMessage);
+ 
+}
+

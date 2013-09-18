@@ -23,6 +23,10 @@ function krnBootstrap()      // Page 8.
    _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
    _Console = new CLIconsole();          // The command line interface / console I/O device.
 
+   //Initialize the taskbar
+	_TaskBar = new TaskBar();
+	_TaskBar.init();
+   
    // Initialize the CLIconsole.
    _Console.init();
 
@@ -72,6 +76,15 @@ function krnShutdown()
 
 function krnOnCPUClockPulse() 
 {
+	if (counteri < 9) {
+		counteri++;
+	} else {
+		//krnTrace("hello");
+		//_Taskbar.clockTick();
+		krnInterruptHandler(TIMER_IRQ, "params");
+		//clockTick();
+		counteri = 0;
+	}
     /* This gets called from the host hardware sim every time there is a hardware clock pulse.
        This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
        This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel 
@@ -138,6 +151,7 @@ function krnInterruptHandler(irq, params)    // This is the Interrupt Handler Ro
 
 function krnTimerISR()  // The built-in TIMER (not clock) Interrupt Service Routine (as opposed to an ISR coming from a device driver).
 {
+	_TaskBar.clockTick();
     // Check multiprogramming parameters and enforce quanta here. Call the scheduler / context switch here if necessary.
 }   
 
@@ -185,6 +199,13 @@ function krnTrace(msg)
 function krnTrapError(msg)
 {
     hostLog("OS ERROR - TRAP: " + msg);
-    // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
+    _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+    _DrawingContext.fillStyle = "blue";
+    _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+    _StdIn.putText("YARRR WE BE TAKIN' ON WATER CAPTAIN!");
+    _StdIn.advanceLine();
+    _StdIn.putText("A GIANT CRAB TORE A HOLE IN THE OS!");
+    _StdIn.advanceLine();
+    _StdIn.putText("ABANDON SHIP!");
     krnShutdown();
 }

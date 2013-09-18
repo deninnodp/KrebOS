@@ -24,6 +24,8 @@
    <script type="text/javascript" src="scripts/os/deviceDriverKeyboard.js"></script>
    <script type="text/javascript" src="scripts/os/queue.js"></script>
    <script type="text/javascript" src="scripts/os/shell.js"></script>
+   <script type="text/javascript" src="scripts/os/clock.js"></script>
+   <script type="text/javascript" src="scripts/os/taskBar.js"></script>
    <script type="text/javascript" src="scripts/os/kernel.js"></script>
 
    <!-- Other Routines -->
@@ -70,7 +72,14 @@
               tabindex="3">
       </canvas>
    </div>
-
+   
+   <div id="divTaskBar" style="margin:4px; width:500px; height:30px; float:left;">
+        <canvas id="taskBar"
+        width="500"
+        height="30">
+        </canvas>
+   </div>
+   
    <div id="divLog" style="margin-left:520px;">
       <label>
          Log

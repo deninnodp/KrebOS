@@ -32,6 +32,7 @@ function CLIconsole() {
 
 	 this.clearCharacter = function(x, y, chr) {
 		_DrawingContext.clearCharacter(x, y, chr);
+		_DrawingContext.clearCharacter(_DrawingContext, x, y, _DefaultFontSize, chr);
 	}
 
 	this.clearCurrentLine = function() {
@@ -149,7 +150,7 @@ function CLIconsole() {
 
 			// Actually clear the area on the canvas object
 			_DrawingContext.clearCharacter(this.CurrentXPosition, this.CurrentYPosition, this.CurrentFontSize, lastChar);
-			this.clearCharacter(this.CurrentXPosition, this.CurrentYPosition, lastChar);
+			this.clearCharacter(_DrawingContext, this.CurrentXPosition, this.CurrentYPosition, this.CurrentFontSize, lastChar);
 		}
 
 		// move the current position back

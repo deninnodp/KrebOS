@@ -16,6 +16,8 @@ var APP_VERSION = "0.1";   // Version #
 
 var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
+var CLOCK_REFRESH = 10;
+
 var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                     // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;  
@@ -57,6 +59,20 @@ var _SarcasticMode = false;
 
 // Global Device Driver Objects - page 12
 var krnKeyboardDriver = null;
+
+// For taskBar
+
+var _TaskBar = null;
+var _StatusContext = null;
+var _ClockXLocation = 50;
+var _ClockYLocation = 5;
+
+//for clock
+var CLOCK_ENABLED = true;
+var currentdatetime = new Date();
+var counteri = 0;
+
+
 
 // For testing...
 var _GLaDOS = null;

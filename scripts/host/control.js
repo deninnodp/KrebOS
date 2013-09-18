@@ -35,6 +35,14 @@ function hostInit()
 
 	// Set focus on the start button.
    document.getElementById("btnStartOS").focus();
+   
+   //taskBar enabling!
+    _TaskBar = document.getElementById('taskBar');
+    _StatusContext = _TaskBar.getContext('2d');
+    _TaskBarContext = _TaskBar.getContext('2d');
+	CanvasTextFunctions.enable(_StatusContext);
+	CanvasTextFunctions.enable(_TaskBarContext);
+   
 
    // Check for our testing and enrichment core.
    if (typeof Glados === "function") {
