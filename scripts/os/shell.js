@@ -455,11 +455,16 @@ function shellLoad(args)
 	var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
     var result = patt.exec(input2);
     krnTrace(result);
+    
     //if a valid program cannot be matched, ignore it.
     if (result != input2)
     	{
+    		_StdIn.putText("Invalid Program. Please try again.")
     		krnTrace("User entered invalid program, disregarding.")
-    	}
+    	}else if (result == input2)
+    		{
+    		_StdIn.putText("Program Valid. Loading...");
+    		}
     //TODO:actually run these
 }
 
