@@ -44,11 +44,11 @@ function CLIconsole() {
 		while (_KernelInputQueue.getSize() > 0) {
 			// Get the next character from the kernel input queue.
 			var chr = _KernelInputQueue.dequeue();
-			//krnTrace("HELLO");
+			//krnTrace("HELLO " + String.fromCharCode(38));
 			// Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
 			if (chr == String.fromCharCode(13)) //     Enter key
 			{
-				krnTrace("LOOK HERE:" + this.buffer);
+				//krnTrace("LOOK HERE:" + this.buffer);
 				// The enter key marks the end of a console command, so ...
 				// ... tell the shell ...
 				_OsShell.handleInput(this.buffer);
@@ -67,59 +67,62 @@ function CLIconsole() {
 					this.removeLastChar(lastChar);
 
 				}
-			} else if (chr == String.fromCharCode(38)) {
+			} else if (chr == String.fromCharCode(9)) {
 			    //arrow key up - command history up
 				
+				//ensure we havent reached the end of the history
 				if (historyindex > 0)
 					{
 						historyindex--;
-					
+					//clear buffer and actual screen space
 				this.buffer = "";
-				_DrawingContext.clearRect(0, 476, 500, 17);
+				_DrawingContext.clearRect(0, 475, 500, 18);
 				this.CurrentXPosition = 0;
 				_StdIn.putText('>');
-				krnTrace("UP INDEX:" + historyindex);
 				
+				//ensure we are looking up a valid history item
 				if (historyarray[historyindex] != undefined)
 				{
+					//split it into chars so we may enqueue them
 					chararray = historyarray[historyindex].split('');
 					
 				}
 				
-
-					//krnTrace("LALA");
+					//enqueue the history command letter by letter
 					for(var i=0;i<chararray.length;i++)
 						{
-							//krnTrace(chararray[i]);
+							
 							_KernelInputQueue.enqueue(chararray[i]);
 						}
 				
 				krnTrace(historyarray[historyindex]);
 				
 					}
-			} else if (chr == String.fromCharCode(40)) {
+			} else if (chr == String.fromCharCode(10)) {
 			    //arrow key down - command history down
+				
+				//ensure we havent reached the end of the history
 				if (historyindex < historyarray.length)
 				{
 					historyindex++;
-				
+					
+				//clear buffer and actual screen space
 				this.buffer = "";
 				_DrawingContext.clearRect(0, 476, 500, 17);
 				this.CurrentXPosition = 0;
 				_StdIn.putText('>');
-				//krnTrace(historyarray[historyindex]);
-				krnTrace("DOWN INDEX:" + historyindex);
 				
+				//ensure we are looking up a valid history item
 				if (historyarray[historyindex] != undefined)
 					{
+						//split it into chars so we may enqueue them
 						chararray = historyarray[historyindex].split('');
 					}
 				
 				
-
+					//enqueue the history command letter by letter
 					for(var i=0;i<chararray.length;i++)
 						{
-							//krnTrace(chararray[i]);
 							_KernelInputQueue.enqueue(chararray[i]);
 						}
 					}
@@ -163,6 +166,7 @@ function CLIconsole() {
 		} else
 			this.CurrentYPosition += _DefaultFontSize + _FontHeightMargin;
 	};
+	
 	
 	this.unadvanceLine = function() {
 		this.CurrentXPosition = 0;

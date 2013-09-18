@@ -113,7 +113,8 @@ function krnKbdDispatchKeyPress(params)
          ((keyCode >= 96) && (keyCode <= 107))    ||   // numpad #1
          ((keyCode >= 109) && (keyCode <= 111))   ||   // numpad #2
          ((keyCode >= 186) && (keyCode <= 192))   ||   // punct #1
-         ((keyCode >= 219) && (keyCode <= 222)))
+         ((keyCode >= 219) && (keyCode <= 222))   ||
+         ((keyCode >= 48) && (keyCode <= 57)))
     {
         // Determine the character we want to display.  
         // Assume it's lowercase...
@@ -126,14 +127,20 @@ function krnKbdDispatchKeyPress(params)
         // TODO: Check for caps-lock and handle as shifted if so.
         _KernelInputQueue.enqueue(chr);        
     }    
-    else if ( ((keyCode >= 48) && (keyCode <= 57)) ||   // digits 
-               (keyCode == 32)                     ||   // space
+    else if ((keyCode == 32)                     ||   // space
                (keyCode == 13)                   ||   // enter
-               (keyCode == 8)   ||                        //backspace
-    			(keyCode == 38) ||
-    			(keyCode == 40))
+               (keyCode == 8))                           //backspace
     	{
     	 chr = String.fromCharCode(keyCode);
         _KernelInputQueue.enqueue(chr); 
-    }
+        
+    } else if (keyCode == 38)
+    	{
+    	chr = String.fromCharCode(9);
+    		_KernelInputQueue.enqueue(chr); 
+    	} else if (keyCode == 40)
+    	{
+        	chr = String.fromCharCode(10);
+    		_KernelInputQueue.enqueue(chr);
+    	} 
 }

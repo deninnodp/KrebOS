@@ -416,7 +416,9 @@ function shellDate()
 
 function shellWhere()
 {
-	_StdIn.putText("You're traveling through another dimension, a dimension not only of sight and sound but of mind.");
+	_StdIn.putText("You're traveling through another dimension.");
+	_StdIn.advanceLine();
+	_StdIn.putText("A dimension not only of sight and sound but of mind.");
 }
 
 function shellFlip(args)

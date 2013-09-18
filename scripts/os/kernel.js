@@ -199,13 +199,9 @@ function krnTrace(msg)
 function krnTrapError(msg)
 {
     hostLog("OS ERROR - TRAP: " + msg);
-    _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+    _DrawingContext.clearRect(0, 0, _Canvas.width, 500);
     _DrawingContext.fillStyle = "blue";
-    _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
-    _StdIn.putText("YARRR WE BE TAKIN' ON WATER CAPTAIN!");
-    _StdIn.advanceLine();
-    _StdIn.putText("A GIANT CRAB TORE A HOLE IN THE OS!");
-    _StdIn.advanceLine();
-    _StdIn.putText("ABANDON SHIP!");
+    _DrawingContext.fillRect(0, 0, _Canvas.width, 500);
+    _StdIn.putText("THE OS IS SINKING! ABANDON SHIP!");
     krnShutdown();
 }
