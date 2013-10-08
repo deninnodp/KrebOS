@@ -42,6 +42,7 @@ function krnBootstrap()      // Page 8.
 	_current_pcb = new pcb();
 	
 	_cpu = new cpu();
+	_cpu.init();
 	
 	_pcDisplay = document.getElementById("tdPC");
 	_accDisplay = document.getElementById("tdACC");

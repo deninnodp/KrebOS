@@ -55,6 +55,7 @@ function cpu() {
 
 		// get first instruction
 		var instruction = _memManagement.getAddress(start_location);
+		krnTrace("LOOKY HERE " + instruction);
 
 		while (instruction != "00") // go till 00 (break)
 		{
@@ -85,7 +86,7 @@ function cpu() {
 				// alert("pcb.accum just set to " + this.pcb.accum);
 
 				// need to increment pc- will skip the variable
-				this.pcb.program_counter++;
+				this.pcb.pc++;
 
 				// check for store into mainmem
 			}else if (instruction == "8D") {
@@ -238,7 +239,7 @@ function cpu() {
 				}
 
 			// increment PC by 1, get next instruction
-			this.pcb.program_counter++;
+			this.pcb.pc++;
 			var current_location = _memManagement.getPC();
 			instruction = _memManagement.getAddress(current_location);
 

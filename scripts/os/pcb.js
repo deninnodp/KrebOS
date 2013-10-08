@@ -35,4 +35,9 @@ function pcb(state, pid, pc, base, limit, priority)
         this.base = base;
         this.limit = limit;
     };
+    
+    this.display = function()
+    {
+    	krnTrace("PC: " + this.pc + " ACC: " + this.acc + " X: " + this.x + " Y: " + this.y + " STATE: " + this.state + " Z: " + this.z + " BASE: " + this.base + " LIMIT: " + this.limit);
+    }
 }
