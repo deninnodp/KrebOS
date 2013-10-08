@@ -89,10 +89,10 @@ function cpu() {
 				// var current_pc = this.pcb.program_counter;
 
 				// swap the locations - little n-dian
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
+				var location = _memManagement.getAddress(current_pc + 1); // _memManagement.getAddress(current_pc + 2) +
+				krnTrace("woop " + location);
 				var mem_loc = parseInt(location, 16); // get hex value
-
+				krnTrace("woop2 " + mem_loc);
 				_mainMem.Memory[mem_loc] = this.pcb.accum;
 
 				this.pcb.pc += 2;
@@ -176,21 +176,27 @@ function cpu() {
 				//System call
 				krnInterruptHandler("SYSTEM_IRQ", 0);
 				// krnInterruptDispatcher(irq, params)
+			
 			}else if (instruction == "EA") {
 				//this is useless, it's the DO NOTHING opcode
+			
 			}else if (instruction == "D0") {
-				krnTrace("WE GOT D0 " + this.pcb.zflag)
-				if(this.pcb.zflag == 0) //if z register is 0 then set pc to given location
+				krnTrace("WE GOT D0 " + this.pcb.Zflag);
+				if(this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
 	            {
-					var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
+					var location = _memManagement.getAddress(current_pc + 1);  //_memManagement.getAddress(current_pc + 2) +
+					krnTrace("loc " + location);
 					var mem_loc = parseInt(location, 16);
+					krnTrace("memloc " + mem_loc);
+					krnTrace("before: " + this.pcb.pc);
 					this.pcb.pc = this.pcb.pc + mem_loc;
+					krnTrace("after: " + this.pcb.pc);
 	            
 					if (this.pcb.pc > 255)
 						{
-						this.pcb.pc = this.pcb.pc - 256;
+						this.pcb.pc = this.pcb.pc - 255;
 						}
+					krnTrace("after2: " + this.pcb.pc);
 	            }
 	            else //just inc pc as normal
 	            {
@@ -215,9 +221,9 @@ function cpu() {
 				
 				if (this.pcb.xreg == memByte)
 					{
-					this.pcb.zflag = 1;
+					this.pcb.Zflag = 1;
 					}else{
-						this.pcb.zflag = 0;
+						this.pcb.Zflag = 0;
 					}
 				this.pcb.pc += 2;
 			}else

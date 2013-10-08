@@ -242,8 +242,10 @@ function krnHandleSystemCall()
 			
 		}else if (_current_pcb.xreg == 2) 
 		{
+			//krnTrace("hi");
 			_StdIn.advanceLine();
-			var startaddress = _cpu.Yreg;
+			krnTrace("hu " + _current_pcb.yreg);
+			var startaddress = _current_pcb.yreg;
 			var string = "";
 			var char = _memManagement.getAddress(startaddress);
 			while(char != 0)
