@@ -35,3 +35,22 @@ function rot13(str) {   // An easy-to understand implementation of the famous an
     }
     return retVal;
 }
+
+function stringFiller(origStr, template)
+{
+     var finalStr = "";
+     if( origStr.length > template.length )
+     {
+          finalStr=origStr;
+     }
+     else
+     {
+          for( var i=0; i < template.length - origStr.length; i++ )
+          {
+               finalStr += template.charAt( i );
+          }
+          finalStr+=origStr;
+     }
+
+     return finalStr;
+}

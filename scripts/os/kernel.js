@@ -33,6 +33,21 @@ function krnBootstrap()      // Page 8.
    // Initialize standard input and output to the _Console.
    _StdIn  = _Console;
    _StdOut = _Console;
+   
+	_mainMem = new mainMem();
+	_mainMem.init();
+	
+	_memManagement = new memManagement();
+	
+	_current_pcb = new pcb();
+	
+	_cpu = new cpu();
+	
+	_pcDisplay = document.getElementById("tdPC");
+	_accDisplay = document.getElementById("tdACC");
+	_xDisplay = document.getElementById("tdX");
+	_yDisplay = document.getElementById("tdY");
+	_zDisplay = document.getElementById("tdZ");
 
    // Load the Keyboard Device Driver
    krnTrace("Loading the keyboard device driver.");
@@ -76,6 +91,15 @@ function krnShutdown()
 
 function krnOnCPUClockPulse() 
 {
+	//Update the register displays
+	/*
+	_pcDisplay.innerHTML=_current_pcb.program_counter;
+	_accDisplay.innerHTML=_current_pcb.accum;
+	_xDisplay.innerHTML=_current_pcb.xreg;
+	_yDisplay.innerHTML=_current_pcb.yreg;
+	_zDisplay.innerHTML=_current_pcb.Zflag;
+	*/
+	
 	if (counteri < 9) {
 		counteri++;
 	} else {
@@ -98,9 +122,9 @@ function krnOnCPUClockPulse()
         var interrupt = _KernelInterruptQueue.dequeue();
         krnInterruptHandler(interrupt.irq, interrupt.params);
     }
-    else if (_CPU.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
+    else if (_cpu.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
     {
-        _CPU.cycle();
+        _cpu.cycle();
     }    
     else                       // If there are no interrupts and there is nothing being executed then just be idle.
     {
@@ -144,6 +168,9 @@ function krnInterruptHandler(irq, params)    // This is the Interrupt Handler Ro
             krnKeyboardDriver.isr(params);   // Kernel mode device driver
             _StdIn.handleInput();
             break;
+    	case SYSTEM_IRQ: //system call TODO:handle this
+
+    		break;
         default: 
             krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
     }

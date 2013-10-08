@@ -114,6 +114,13 @@ function shellInit() {
     sc.description = "Loads a user program from the program input textarea into memory.";
     sc.function = shellLoad;
     this.commandList[this.commandList.length] = sc;
+    
+    // run <pid>
+	sc = new ShellCommand();
+    sc.command = "run";
+    sc.description = "<pid> - run a program already in memory.";
+    sc.function = shellRun;
+    this.commandList[this.commandList.length] = sc;
 
     // status
     sc = new ShellCommand();
@@ -444,6 +451,7 @@ function shellBSOD(args)
 
 function shellLoad(args)
 {
+	
 	//This time around I wrote a much more robust checking program.
 	var input = document.getElementById("taProgramInput").value; //grab input
 	krnTrace(input);
@@ -459,13 +467,48 @@ function shellLoad(args)
     //if a valid program cannot be matched, ignore it.
     if (result != input2)
     	{
-    		_StdIn.putText("Invalid Program. Please try again.")
-    		krnTrace("User entered invalid program, disregarding.")
+    		_StdIn.putText("Invalid Program. Please try again.");
+    		krnTrace("User entered invalid program, disregarding.");
     	}else if (result == input2)
     		{
-    		_StdIn.putText("Program Valid. Loading...");
+	    		_StdIn.putText("Program Valid. Loading...");
+	    		_StdIn.advanceLine();
+	    		
+	    		current_pid = pid_next;
+	    		
+				_program_queue[pid_next] = new pcb(0,current_pid,0,0,255,0);
+				_current_pcb = _program_queue[pid_next];
+	    		
+				//krnTrace("User entered invalid program, disregarding.");
+				
+	    			    		
+	    		
+	    		_memManagement.storeProgram(input);
+	    		
+	    		_pcDisplay.innerHTML=_current_pcb.program_counter;
+	    		_accDisplay.innerHTML=_current_pcb.accum;
+	    		_xDisplay.innerHTML=_current_pcb.xreg;
+	    		_yDisplay.innerHTML=_current_pcb.yreg;
+	    		_zDisplay.innerHTML=_current_pcb.Zflag;
+	    		
+	    		_StdOut.putText("Program loaded. Type 'run " + pid_next + "' to execute");
+	    		
+	    		pid_next = current_pid+1;
     		}
     //TODO:actually run these
+}
+
+function shellRun(args)
+{
+	if((args[0] == null) || (args[0] > pid_next))
+	{
+		_StdOut.putText("Please enter a proper proccess ID");
+	} else 
+	{
+		_current_pcb = _program_queue[args[0]];
+		_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
+		_program_queue[current_pid] = _current_pcb;
+	}
 }
 
 

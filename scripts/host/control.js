@@ -91,7 +91,7 @@ function hostBtnStartOS_click(btn)
     document.getElementById("display").focus();
     
     // ... Create and initialize the CPU ...
-    _CPU = new Cpu();
+    _CPU = new cpu();
     _CPU.init();
 
     // ... then set the host clock pulse ...

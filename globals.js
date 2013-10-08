@@ -14,7 +14,7 @@
 var APP_NAME = "KrebOS";  // because I am DJ KREBMEN ....really.
 var APP_VERSION = "0.1";   // Version #
 
-var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
+var CPU_CLOCK_INTERVAL = 1000;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
 var CLOCK_REFRESH = 10;
 
@@ -23,10 +23,15 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
 var KEYBOARD_IRQ = 1;  
 
 
+var _pcDisplay;
+var _accDisplay;
+var _xDisplay;
+var _yDisplay;
+var _zDisplay;
 //
 // Global Variables
 //
-var _CPU = null;
+var _cpu = null;
 
 var _OSclock = 0;       // Page 23.
 
@@ -76,6 +81,18 @@ var historyarray = new Array();
 var historyindex = 0;
 var chararray;
 var i=0;
+
+//main memory
+var _mainMem = null;
+
+//pid stuff
+current_pid = 0; //pid thats loaded into memory
+pid_next = 0; //used to determine what a free pid is
+_program_queue = new Array();
+_current_pcb = null;
+
+//mem managament
+var _memManagement = null;
 
 // For testing...
 var _GLaDOS = null;
