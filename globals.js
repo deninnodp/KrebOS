@@ -96,3 +96,5 @@ var _memManagement = null;
 
 // For testing...
 var _GLaDOS = null;
+
+var step = false;

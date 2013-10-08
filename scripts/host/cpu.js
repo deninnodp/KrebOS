@@ -55,35 +55,29 @@ function cpu() {
 
 		// get first instruction
 		var instruction = _memManagement.getAddress(start_location);
-		krnTrace("LOOKY HERE " + instruction);
 
 		while (instruction != "00") // go till 00 (break)
 		{
+			krnTrace("LOOKY HERE " + instruction);
 			//Update the register displays
-			_pcDisplay.innerHTML=_current_pcb.program_counter;
+			/*
+			_pcDisplay.innerHTML=_current_pcb.pc;
 			_accDisplay.innerHTML=_current_pcb.accum;
 			_xDisplay.innerHTML=_current_pcb.xreg;
 			_yDisplay.innerHTML=_current_pcb.yreg;
 			_zDisplay.innerHTML=_current_pcb.Zflag;
-			
+			*/
 			var current_pc = _memManagement.getPC();
 
 			// check for load
 			if (instruction == "A9") {
-
-				// We know instruction is A9
 				// A9 means take next value and store in accum.
 
-				// var current_pc = this.pcb.program_counter;
-
-				// alert("current pc " + current_pc);
 				var strConst = _memManagement.getAddress(current_pc + 1);
-				// alert("next address isssss " + strConst);
 
 				var value = parseInt(strConst);
 
 				this.pcb.accum = value; // set accum to value
-				// alert("pcb.accum just set to " + this.pcb.accum);
 
 				// need to increment pc- will skip the variable
 				this.pcb.pc++;
@@ -101,7 +95,7 @@ function cpu() {
 
 				_mainMem.Memory[mem_loc] = this.pcb.accum;
 
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 				// LDA from mem
 			}else if (instruction == "AD") {
 
@@ -115,7 +109,7 @@ function cpu() {
 
 				this.pcb.accum = _mainMem.Memory[mem_loc];
 
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 				// check for add with carry (add address with accum)
 			}else if (instruction == "6D") {
 				// get location where need to add from
@@ -128,15 +122,10 @@ function cpu() {
 				// alert(this.memory[mem_loc] + " " + this.pcb.accum);
 				this.pcb.accum = this.pcb.accum + _mainMem.Memory[mem_loc];
 
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 				
 				// check to load x with constant
 			}else if (instruction == "A2") {
-
-				// We know instruction is A9
-				// A9 means take next value and store in accum.
-
-				// var current_pc = this.pcb.program_counter;
 
 				var strConst = _memManagement.getAddress(current_pc + 1);
 
@@ -145,7 +134,7 @@ function cpu() {
 				this.pcb.xreg = value; // set accum to value
 
 				// need to increment pc- will skip the variable
-				this.pcb.program_counter++;
+				this.pcb.pc++;
 				
 				// load y reg with constant
 			}else if (instruction == "A0") {
@@ -159,20 +148,17 @@ function cpu() {
 				this.pcb.yreg = value; // set accum to value
 
 				// need to increment pc- will skip the variable
-				this.pcb.program_counter++;
+				this.pcb.pc++;
 				
 				// load y reg from mem
 			}else if (instruction == "AC") {
-				// get location where need to add from
-				// var current_pc = this.pcb.program_counter;
 
-				// swap the locations - little n-dian
 				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 				var mem_loc = parseInt(location, 16);
 
 				this.pcb.yreg = _mainMem.Memory[mem_loc];
 
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 				//load x reg from mem
 			}else if (instruction == "AE") {
 				// get location where need to add from
@@ -184,25 +170,26 @@ function cpu() {
 
 				this.pcb.xreg = _mainMem.Memory[mem_loc];
 
-				this.pcb.program_counter += 2;
-				// system call? todo: make this something?
+				this.pcb.pc += 2;
+				
 			}else if (instruction == "FF") {
-				// system call? tell processor done with process?
-				krnInterruptHandler(SYSTEM_IRQ, 0);
+				//System call
+				krnInterruptHandler("SYSTEM_IRQ", 0);
 				// krnInterruptDispatcher(irq, params)
 			}else if (instruction == "EA") {
-				
+				//this is useless, it's the DO NOTHING opcode
 			}else if (instruction == "D0") {
+				krnTrace("WE GOT D0 " + this.pcb.zflag)
 				if(this.pcb.zflag == 0) //if z register is 0 then set pc to given location
 	            {
 					var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 
 					var mem_loc = parseInt(location, 16);
-					this.pcb.program_counter = this.pcb.program_counter + mem_loc;
+					this.pcb.pc = this.pcb.pc + mem_loc;
 	            
-					if (this.pcb.program_counter > 255)
+					if (this.pcb.pc > 255)
 						{
-						this.pcb.program_counter = this.pcb.program_counter - 256;
+						this.pcb.pc = this.pcb.pc - 256;
 						}
 	            }
 	            else //just inc pc as normal
@@ -217,7 +204,7 @@ function cpu() {
 				var memByte = _mainMem.Memory[mem_loc];
 				_mainMem.Memory[mem_loc] = ++memByte;
 				
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 				
 			}else if (instruction == "EC") {
 				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
@@ -232,7 +219,7 @@ function cpu() {
 					}else{
 						this.pcb.zflag = 0;
 					}
-				this.pcb.program_counter += 2;
+				this.pcb.pc += 2;
 			}else
 				{
 				//krnTrapError("Invalid Machine Code.");

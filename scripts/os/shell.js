@@ -485,11 +485,11 @@ function shellLoad(args)
 	    		
 	    		_memManagement.storeProgram(input);
 	    		
-	    		_pcDisplay.innerHTML=_current_pcb.program_counter;
-	    		_accDisplay.innerHTML=_current_pcb.accum;
-	    		_xDisplay.innerHTML=_current_pcb.xreg;
-	    		_yDisplay.innerHTML=_current_pcb.yreg;
-	    		_zDisplay.innerHTML=_current_pcb.Zflag;
+	    		_pcDisplay.innerHTML=_current_pcb.pc;
+	    		_accDisplay.innerHTML=_current_pcb.acc;
+	    		_xDisplay.innerHTML=_current_pcb.x;
+	    		_yDisplay.innerHTML=_current_pcb.y;
+	    		_zDisplay.innerHTML=_current_pcb.z;
 	    		
 	    		_StdOut.putText("Program loaded. Type 'run " + pid_next + "' to execute");
 	    		

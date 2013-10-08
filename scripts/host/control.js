@@ -119,3 +119,28 @@ function hostBtnReset_click(btn)
     // be reloaded from the server. If it is false or not specified, the browser may reload the 
     // page from its cache, which is not what we want.
 }
+
+function hostBtnStepOn_click(btn)
+{
+	document.getElementById("btnStepOn").disabled = true;
+	document.getElementById("btnStepOff").disabled = false;
+	document.getElementById("btnStep").disabled = false;
+	step = true;
+}
+
+function hostBtnStepOff_click(btn)
+{
+	document.getElementById("btnStepOn").disabled = false;
+	document.getElementById("btnStepOff").disabled = true;
+	document.getElementById("btnStep").disabled = true;
+	step = false;
+	
+}
+
+function hostBtnStep_click(btn)
+{
+	krnOnCPUClockPulse();
+}
+
+
+

@@ -125,7 +125,10 @@ function krnOnCPUClockPulse()
     }
     else if (_cpu.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
     {
-        _cpu.cycle();
+    	if (step == false)
+    		{
+    			_cpu.cycle();
+    		}
     }    
     else                       // If there are no interrupts and there is nothing being executed then just be idle.
     {
@@ -169,8 +172,8 @@ function krnInterruptHandler(irq, params)    // This is the Interrupt Handler Ro
             krnKeyboardDriver.isr(params);   // Kernel mode device driver
             _StdIn.handleInput();
             break;
-    	case SYSTEM_IRQ: //system call TODO:handle this
-
+    	case "SYSTEM_IRQ": //system call
+    		krnHandleSystemCall();
     		break;
         default: 
             krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -222,6 +225,35 @@ function krnTrace(msg)
        hostLog(msg, "OS");
       }
    }
+}
+
+
+function krnHandleSystemCall()
+{
+	krnTrace("handling system call");
+	krnTrace("hi " + _current_pcb.xreg);
+	if (_cpu.Xreg == 1)
+		{
+			krnTrace("hubba");
+			_StdIn.advanceLine();
+			_StdIn.putText(_cpu.Yreg);
+			_StdIn.advanceLine();
+			_StdIn.putText(this.promptStr);
+			
+		}else if (_cpu.Xreg == 2) 
+		{
+			_StdIn.advanceLine();
+			var startaddress = _cpu.Yreg;
+			var string = "";
+			var char = _memManagement.getAddress(startaddress);
+			while(char != 0)
+				{
+					str += String.fromCharCode(char);
+					startaddress++;
+					char = _memManagement.getAddress(startaddress);
+				}
+			_StdIn.putText();
+		}
 }
    
 function krnTrapError(msg)
