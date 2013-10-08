@@ -235,26 +235,37 @@ function krnHandleSystemCall()
 			krnTrace("hu " + _current_pcb.yreg);
 			//_StdIn.advanceLine();
 			//_StdIn.putText(_current_pcb.yreg);
-		var temp = _current_pcb.yreg.toString();
+			
+			var temp = _current_pcb.yreg.toString();
+			temp = temp.replace(/^0+/, '');
 			_StdIn.putText(temp);
 			_StdIn.advanceLine();
 			//_StdIn.putText(">");
 			
 		}else if (_current_pcb.xreg == 2) 
 		{
-			//krnTrace("hi");
-			_StdIn.advanceLine();
+			krnTrace("hi");
+			//_StdIn.advanceLine();
 			krnTrace("hu " + _current_pcb.yreg);
 			var startaddress = _current_pcb.yreg;
+			krnTrace("startaddress: " + startaddress);
+			var mem_loca = parseInt(startaddress, 16);
+			krnTrace("mem_loca: " + mem_loca);
 			var string = "";
-			var char = _memManagement.getAddress(startaddress);
-			while(char != 0)
+			var char = _memManagement.getAddress(mem_loca);
+			var charencoded = parseInt(char, 16);
+			krnTrace("char: " + char);
+			krnTrace("charencoded: " + charencoded);
+			while(charencoded != 0)
 				{
-					str += String.fromCharCode(char);
-					startaddress++;
-					char = _memManagement.getAddress(startaddress);
+					krnTrace("actualchar " + String.fromCharCode(charencoded));
+					string += String.fromCharCode(charencoded);
+					mem_loca++;
+					char = _memManagement.getAddress(mem_loca);
+					charencoded = parseInt(char, 16);
+					krnTrace("chare: " + charencoded);
 				}
-			//_StdOut.putText();
+			_StdOut.putText(string);
 		}
 }
    
