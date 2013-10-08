@@ -125,10 +125,8 @@ function krnOnCPUClockPulse()
     }
     else if (_cpu.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
     {
-    	if (step == false)
-    		{
     			_cpu.cycle();
-    		}
+    		
     }    
     else                       // If there are no interrupts and there is nothing being executed then just be idle.
     {
@@ -231,16 +229,18 @@ function krnTrace(msg)
 function krnHandleSystemCall()
 {
 	krnTrace("handling system call");
-	krnTrace("hi " + _current_pcb.xreg);
-	if (_cpu.Xreg == 1)
+	//krnTrace("hi " + _current_pcb.xreg);
+	if (_current_pcb.xreg == 1)
 		{
-			krnTrace("hubba");
+			krnTrace("hu " + _current_pcb.yreg);
+			//_StdIn.advanceLine();
+			//_StdIn.putText(_current_pcb.yreg);
+		var temp = _current_pcb.yreg.toString();
+			_StdIn.putText(temp);
 			_StdIn.advanceLine();
-			_StdIn.putText(_cpu.Yreg);
-			_StdIn.advanceLine();
-			_StdIn.putText(this.promptStr);
+			//_StdIn.putText(">");
 			
-		}else if (_cpu.Xreg == 2) 
+		}else if (_current_pcb.xreg == 2) 
 		{
 			_StdIn.advanceLine();
 			var startaddress = _cpu.Yreg;
@@ -252,7 +252,7 @@ function krnHandleSystemCall()
 					startaddress++;
 					char = _memManagement.getAddress(startaddress);
 				}
-			_StdIn.putText();
+			//_StdOut.putText();
 		}
 }
    
