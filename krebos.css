@@ -43,6 +43,13 @@ h3 {
 	cursor: default;
 }
 
+#infoBar 
+{
+	background-color: #DFDBC3;
+	border: 2px solid purple; 
+	cursor: default;
+}
+
 .normal_button {
 	width: 100px;
 }
