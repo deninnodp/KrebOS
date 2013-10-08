@@ -125,8 +125,10 @@ function krnOnCPUClockPulse()
     }
     else if (_cpu.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
     {
-    			_cpu.cycle();
-    		
+    	if (step = false)
+    		{
+    			_cpu.iterate();
+    		}
     }    
     else                       // If there are no interrupts and there is nothing being executed then just be idle.
     {

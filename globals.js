@@ -23,6 +23,9 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
 var KEYBOARD_IRQ = 1;  
 
 
+var instruction;
+var start_location;
+
 var _pcDisplay;
 var _accDisplay;
 var _xDisplay;

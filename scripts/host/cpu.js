@@ -46,216 +46,225 @@ function cpu() {
 		// gets initial info
 		this.pcb = _current_pcb;
 
-		// search through the array and look for one of the commands
-		// once found do the command, then remove that from the list
-
-		var start_location = _memManagement.getPC(); // will get the virtual
-														// address where program
-														// start in mem
-
+		start_location = _memManagement.getPC(); 
+													
 		// get first instruction
-		var instruction = _memManagement.getAddress(start_location);
+		instruction = _memManagement.getAddress(start_location);
 
-		while (instruction != "00") // go till 00 (break)
-		{
-			krnTrace("LOOKY HERE " + instruction);
-			//Update the register displays
-			
-			_pcDisplay.innerHTML=_current_pcb.pc;
-			_accDisplay.innerHTML=_current_pcb.accum;
-			_xDisplay.innerHTML=_current_pcb.xreg;
-			_yDisplay.innerHTML=_current_pcb.yreg;
-			_zDisplay.innerHTML=_current_pcb.Zflag;
-			
-			var current_pc = _memManagement.getPC();
+		_cpu.isExecuting = true;
+		
 
-			// check for load
-			if (instruction == "A9") {
-				// A9 means take next value and store in accum.
-
-				var strConst = _memManagement.getAddress(current_pc + 1);
-
-				krnTrace("CNST " + strConst);
-				if( strConst == "4F" || strConst == "4E")
-					{
-						this.pcb.accum = strConst;
-					}else{
-				var value = parseInt(strConst, 10);
-
-				this.pcb.accum = value; // set accum to value
-
-				krnTrace("ACC " + this.pcb.accum);
-					}
-				// need to increment pc- will skip the variable
-				this.pcb.pc++;
-
-				// check for store into mainmem
-			}else if (instruction == "8D") {
-
-				// get location where need to store accum
-				// var current_pc = this.pcb.program_counter;
-
-				// swap the locations - little n-dian
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1); 
-				krnTrace("woop " + location);
-				var mem_loc = parseInt(location, 16); // get hex value
-				krnTrace("woop2 " + mem_loc);
-				krnTrace("GOING IN " + this.pcb.accum);
-				_mainMem.Memory[mem_loc] = this.pcb.accum;
-
-				this.pcb.pc += 2;
-				// LDA from mem
-			}else if (instruction == "AD") {
-
-				// get location where need to store accum
-				// var current_pc = this.pcb.program_counter;
-
-				// swap the locations - little n-dian
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
-				var mem_loc = parseInt(location, 16); // get hex value
-
-				this.pcb.accum = _mainMem.Memory[mem_loc];
-
-				this.pcb.pc += 2;
-				// check for add with carry (add address with accum)
-			}else if (instruction == "6D") {
-				// get location where need to add from
-				// var current_pc = this.pcb.program_counter;
-
-				// swap the locations - little n-dian
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-				var mem_loc = parseInt(location, 16);
-
-				// alert(this.memory[mem_loc] + " " + this.pcb.accum);
-				this.pcb.accum = this.pcb.accum + _mainMem.Memory[mem_loc];
-
-				this.pcb.pc += 2;
-				
-				// check to load x with constant
-			}else if (instruction == "A2") {
-
-				var strConst = _memManagement.getAddress(current_pc + 1);
-
-				var value = parseInt(strConst);
-
-				this.pcb.xreg = value; // set accum to value
-
-				// need to increment pc- will skip the variable
-				this.pcb.pc++;
-				
-				// load y reg with constant
-			}else if (instruction == "A0") {
-
-				// var current_pc = this.pcb.program_counter;
-
-				var strConst = _memManagement.getAddress(current_pc + 1);
-
-				var value = parseInt(strConst);
-
-				this.pcb.yreg = value; // set accum to value
-
-				// need to increment pc- will skip the variable
-				this.pcb.pc++;
-				
-				// load y reg from mem
-			}else if (instruction == "AC") {
-
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-				var mem_loc = parseInt(location, 16);
-
-				this.pcb.yreg = _mainMem.Memory[mem_loc];
-
-				this.pcb.pc += 2;
-				//load x reg from mem
-			}else if (instruction == "AE") {
-				// get location where need to add from
-				// var current_pc = this.pcb.program_counter;
-
-				// swap the locations - little n-dian
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-				var mem_loc = parseInt(location, 16);
-
-				this.pcb.xreg = _mainMem.Memory[mem_loc];
-
-				this.pcb.pc += 2;
-				
-			}else if (instruction == "FF") {
-				//System call
-				krnInterruptHandler("SYSTEM_IRQ", 0);
-				// krnInterruptDispatcher(irq, params)
-			
-			}else if (instruction == "EA") {
-				//this is useless, it's the DO NOTHING opcode
-			
-			}else if (instruction == "D0") {
-				//krnTrace("WE GOT D0 " + this.pcb.Zflag);
-				if(this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
-	            {
-					var location = _memManagement.getAddress(current_pc + 1);  //_memManagement.getAddress(current_pc + 2) +
-					//krnTrace("loc " + location);
-					var mem_loc = parseInt(location, 16);
-				//	krnTrace("memloc " + mem_loc);
-				//	krnTrace("before: " + this.pcb.pc);
-					this.pcb.pc = this.pcb.pc + mem_loc;
-				//	krnTrace("after: " + this.pcb.pc);
-	            
-					if (this.pcb.pc > 255)
-						{
-						this.pcb.pc = this.pcb.pc - 255;
-						}
-					krnTrace("after2: " + this.pcb.pc);
-	            }
-	            else //just inc pc as normal
-	            {
-	                this.pc++;
-	            }
-				
-			}else if (instruction == "EE") {
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
-				var mem_loc = parseInt(location, 16); // get hex value
-				var memByte = _mainMem.Memory[mem_loc];
-				_mainMem.Memory[mem_loc] = ++memByte;
-				
-				this.pcb.pc += 2;
-				
-			}else if (instruction == "EC") {
-				var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
-				var mem_loc = parseInt(location, 16); // get hex value
-
-				var memByte = _mainMem.Memory[mem_loc];
-				
-				if (this.pcb.xreg == memByte)
-					{
-					this.pcb.Zflag = 1;
-					}else{
-						this.pcb.Zflag = 0;
-					}
-				this.pcb.pc += 2;
-			}else
-				{
-				//krnTrapError("Invalid Machine Code.");
-				}
-
-			// increment PC by 1, get next instruction
-			this.pcb.pc++;
-			var current_location = _memManagement.getPC();
-			instruction = _memManagement.getAddress(current_location);
-
-			_current_pcb = this.pcb
-			_mainMem.display();
-
-			// krnTrace("last instruction was: " + instruction);
-			// this.pcb.display();
 
 		}
 
 		// need to restore the info in the array of pid/current pid
-		_current_pcb = this.pcb
+	
+	this.iterate = function() 
+	{
+		krnTrace("LOOKY HERE " + instruction);
+		//Update the register displays
+		
+		_pcDisplay.innerHTML=_current_pcb.pc;
+		_accDisplay.innerHTML=_current_pcb.accum;
+		_xDisplay.innerHTML=_current_pcb.xreg;
+		_yDisplay.innerHTML=_current_pcb.yreg;
+		_zDisplay.innerHTML=_current_pcb.Zflag;
+		
+		var current_pc = _memManagement.getPC();
 
-		_current_pcb.display();
+		if (instruction == "00") {
+			
+			_current_pcb = this.pcb
+			_current_pcb.display();
+			_cpu.isExecuting = false;
+		
+			
+		}else if (instruction == "A9") {
+		// A9 means take next value and store in accum.
+
+			var strConst = _memManagement.getAddress(current_pc + 1);
+
+			krnTrace("CNST " + strConst);
+			if( strConst == "4F" || strConst == "4E")
+				{
+					this.pcb.accum = strConst;
+				}else{
+			var value = parseInt(strConst, 10);
+
+			this.pcb.accum = value; // set accum to value
+
+			krnTrace("ACC " + this.pcb.accum);
+				}
+			// need to increment pc- will skip the variable
+			this.pcb.pc++;
+
+			// check for store into mainmem
+		}else if (instruction == "8D") {
+
+			// get location where need to store accum
+			// var current_pc = this.pcb.program_counter;
+
+			// swap the locations - little n-dian
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1); 
+			krnTrace("woop " + location);
+			var mem_loc = parseInt(location, 16); // get hex value
+			krnTrace("woop2 " + mem_loc);
+			krnTrace("GOING IN " + this.pcb.accum);
+			_mainMem.Memory[mem_loc] = this.pcb.accum;
+
+			this.pcb.pc += 2;
+			// LDA from mem
+		}else if (instruction == "AD") {
+
+			// get location where need to store accum
+			// var current_pc = this.pcb.program_counter;
+
+			// swap the locations - little n-dian
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+
+			var mem_loc = parseInt(location, 16); // get hex value
+
+			this.pcb.accum = _mainMem.Memory[mem_loc];
+
+			this.pcb.pc += 2;
+			// check for add with carry (add address with accum)
+		}else if (instruction == "6D") {
+			// get location where need to add from
+			// var current_pc = this.pcb.program_counter;
+
+			// swap the locations - little n-dian
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var mem_loc = parseInt(location, 16);
+
+			// alert(this.memory[mem_loc] + " " + this.pcb.accum);
+			this.pcb.accum = this.pcb.accum + _mainMem.Memory[mem_loc];
+
+			this.pcb.pc += 2;
+			
+			// check to load x with constant
+		}else if (instruction == "A2") {
+
+			var strConst = _memManagement.getAddress(current_pc + 1);
+
+			var value = parseInt(strConst);
+
+			this.pcb.xreg = value; // set accum to value
+
+			// need to increment pc- will skip the variable
+			this.pcb.pc++;
+			
+			// load y reg with constant
+		}else if (instruction == "A0") {
+
+			// var current_pc = this.pcb.program_counter;
+
+			var strConst = _memManagement.getAddress(current_pc + 1);
+
+			var value = parseInt(strConst);
+
+			this.pcb.yreg = value; // set accum to value
+
+			// need to increment pc- will skip the variable
+			this.pcb.pc++;
+			
+			// load y reg from mem
+		}else if (instruction == "AC") {
+
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var mem_loc = parseInt(location, 16);
+
+			this.pcb.yreg = _mainMem.Memory[mem_loc];
+
+			this.pcb.pc += 2;
+			//load x reg from mem
+		}else if (instruction == "AE") {
+			// get location where need to add from
+			// var current_pc = this.pcb.program_counter;
+
+			// swap the locations - little n-dian
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var mem_loc = parseInt(location, 16);
+
+			this.pcb.xreg = _mainMem.Memory[mem_loc];
+
+			this.pcb.pc += 2;
+			
+		}else if (instruction == "FF") {
+			//System call
+			krnInterruptHandler("SYSTEM_IRQ", 0);
+			// krnInterruptDispatcher(irq, params)
+		
+		}else if (instruction == "EA") {
+			//this is useless, it's the DO NOTHING opcode
+		
+		}else if (instruction == "D0") {
+			//krnTrace("WE GOT D0 " + this.pcb.Zflag);
+			if(this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
+            {
+				var location = _memManagement.getAddress(current_pc + 1);  //_memManagement.getAddress(current_pc + 2) +
+				//krnTrace("loc " + location);
+				var mem_loc = parseInt(location, 16);
+			//	krnTrace("memloc " + mem_loc);
+			//	krnTrace("before: " + this.pcb.pc);
+				this.pcb.pc = this.pcb.pc + mem_loc;
+			//	krnTrace("after: " + this.pcb.pc);
+            
+				if (this.pcb.pc > 255)
+					{
+					this.pcb.pc = this.pcb.pc - 255;
+					}
+				krnTrace("after2: " + this.pcb.pc);
+            }
+            else //just inc pc as normal
+            {
+                this.pc++;
+            }
+			
+		}else if (instruction == "EE") {
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+
+			var mem_loc = parseInt(location, 16); // get hex value
+			var memByte = _mainMem.Memory[mem_loc];
+			_mainMem.Memory[mem_loc] = ++memByte;
+			
+			this.pcb.pc += 2;
+			
+		}else if (instruction == "EC") {
+			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+
+			var mem_loc = parseInt(location, 16); // get hex value
+
+			var memByte = _mainMem.Memory[mem_loc];
+			
+			if (this.pcb.xreg == memByte)
+				{
+				this.pcb.Zflag = 1;
+				}else{
+					this.pcb.Zflag = 0;
+				}
+			this.pcb.pc += 2;
+		}else
+			{
+			//krnTrapError("Invalid Machine Code.");
+			}
+
+		// increment PC by 1, get next instruction
+		this.pcb.pc++;
+		var current_location = _memManagement.getPC();
+		instruction = _memManagement.getAddress(current_location);
+
+		_current_pcb = this.pcb
+		_mainMem.display();
+		
+		/*
+		if (_cpu.isExecuting == true)
+			{
+				if (step = false)
+					{
+						this.iterate();
+					}
+			}
+			*/
 	}
 
 	// returns memory as a string

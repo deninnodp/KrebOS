@@ -139,7 +139,12 @@ function hostBtnStepOff_click(btn)
 
 function hostBtnStep_click(btn)
 {
-	krnOnCPUClockPulse();
+	if (_cpu.isExecuting == false)
+		{
+			krnOnCPUClockPulse();
+		}else{
+			_cpu.iterate();
+		}
 }
 
 
