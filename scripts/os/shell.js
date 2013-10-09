@@ -483,8 +483,19 @@ function shellLoad(args)
 	// in the right format: Opcode must be first, and will verify that the
 	// correct
 	// argument size is used after as well.
+<<<<<<< HEAD
+	//var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
+    
+	//looks like my previous regex was too robust, I forgot that 
+	//you can have data already loaded into a program beforehand.
+	//So, I'll just use a generic Hex-only regex string.
+	
+	var patt =/\b[0-9A-F]+\b/gi;
+	var result = patt.exec(input2);
+=======
 	var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
     var result = patt.exec(input2);
+>>>>>>> bac79105e8559399b8d1fca45f852914da87f120
     krnTrace(result);
     
     // if a valid program cannot be matched, ignore it.
@@ -510,7 +521,7 @@ function shellLoad(args)
 	    		_xDisplay.innerHTML=_current_pcb.x;
 	    		_yDisplay.innerHTML=_current_pcb.y;
 	    		_zDisplay.innerHTML=_current_pcb.z;
-	    		
+	    		rdytorun = true;
 	    		_StdOut.putText("Program loaded. Type 'run " + pid_next + "' to execute");
 	    		
 	    		//advance next PID
@@ -527,9 +538,15 @@ function shellRun(args)
 		_StdOut.putText("Please enter a proper proccess ID");
 	} else 
 	{
-		_current_pcb = _program_queue[args[0]];
-		_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
-		_program_queue[current_pid] = _current_pcb;
+		if (rdytorun == true)
+			{
+				_current_pcb = _program_queue[args[0]];
+				_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
+				_program_queue[current_pid] = _current_pcb;
+			}else{
+				_StdIn.advanceLine();
+				_StdIn.putText("Load a program first!");
+			}
 	}
 }
 
