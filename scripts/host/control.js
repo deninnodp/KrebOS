@@ -15,137 +15,133 @@
    Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
    ------------ */
 
-
 //
 // Control Services
 //
-function hostInit()
-{
+function hostInit() {
 	// Get a global reference to the canvas.  TODO: Move this stuff into a Display Device Driver, maybe?
-	_Canvas  = document.getElementById('display');
+	_Canvas = document.getElementById('display');
 
 	// Get a global reference to the drawing context.
 	_DrawingContext = _Canvas.getContext('2d');
 
 	// Enable the added-in canvas text functions (see canvastext.js for provenance and details).
-	CanvasTextFunctions.enable(_DrawingContext);   // TODO: Text functionality is now built in to the HTML5 canvas. Consider using that instead.
+	CanvasTextFunctions.enable(_DrawingContext); // TODO: Text functionality is now built in to the HTML5 canvas. Consider using that instead.
 
 	// Clear the log text box.
-	document.getElementById("taLog").value="";
+	document.getElementById("taLog").value = "";
 
 	// Set focus on the start button.
-   document.getElementById("btnStartOS").focus();
-   
-   //taskBar enabling!
-    _TaskBar = document.getElementById('taskBar');
-    _StatusContext = _TaskBar.getContext('2d');
-    _TaskBarContext = _TaskBar.getContext('2d');
+	document.getElementById("btnStartOS").focus();
+
+	//taskBar enabling!
+	_TaskBar = document.getElementById('taskBar');
+	_StatusContext = _TaskBar.getContext('2d');
+	_TaskBarContext = _TaskBar.getContext('2d');
 	CanvasTextFunctions.enable(_StatusContext);
 	CanvasTextFunctions.enable(_TaskBarContext);
-   
 
-   // Check for our testing and enrichment core.
-   if (typeof Glados === "function") {
-      _GLaDOS = new Glados();
-      _GLaDOS.init();
-   };
+	// Check for our testing and enrichment core.
+	if (typeof Glados === "function") {
+		_GLaDOS = new Glados();
+		_GLaDOS.init();
+	}
+	;
 
 }
 
-function hostLog(msg, source)
-{
-    // Check the source.
-    if (!source) {
-        source = "?";
-    }
+function hostLog(msg, source) {
+	// Check the source.
+	if (!source) {
+		source = "?";
+	}
 
-    // Note the OS CLOCK.
-    var clock = _OSclock;
+	// Note the OS CLOCK.
+	var clock = _OSclock;
 
-    // Note the REAL clock in milliseconds since January 1, 1970.
-    var now = new Date().getTime();
+	// Note the REAL clock in milliseconds since January 1, 1970.
+	var now = new Date().getTime();
 
-    // Build the log string.   
-    var str = "({ clock:" + clock + ", source:" + source + ", msg:" + msg + ", now:" + now  + " })"  + "\n";    
+	// Build the log string.   
+	var str = "({ clock:" + clock + ", source:" + source + ", msg:" + msg + ", now:" + now + " })" + "\n";
 
-    // Update the log console.
-    var taLog = document.getElementById("taLog");
-    taLog.value = str + taLog.value;
-    // Optionally update a log database or some streaming service.
+	// Update the log console.
+	var taLog = document.getElementById("taLog");
+	taLog.value = str + taLog.value;
+	// Optionally update a log database or some streaming service.
 }
-
 
 //
 // Control Events
 //
-function hostBtnStartOS_click(btn)
-{
-    // Disable the start button...
-    btn.disabled = true;
-    
-    // .. enable the Halt and Reset buttons ...
-    document.getElementById("btnHaltOS").disabled = false;
-    document.getElementById("btnReset").disabled = false;
-    
-    // .. set focus on the OS console display ... 
-    document.getElementById("display").focus();
-    
-    // ... Create and initialize the CPU ...
-    _CPU = new cpu();
-    _CPU.init();
+function hostBtnStartOS_click(btn) {
+	// Disable the start button...
+	btn.disabled = true;
 
-    // ... then set the host clock pulse ...
-    _hardwareClockID = setInterval(hostClockPulse, CPU_CLOCK_INTERVAL);
-    // .. and call the OS Kernel Bootstrap routine.
-    krnBootstrap();
+	// .. enable the Halt and Reset buttons ...
+	document.getElementById("btnHaltOS").disabled = false;
+	document.getElementById("btnReset").disabled = false;
+
+	// .. set focus on the OS console display ... 
+	document.getElementById("display").focus();
+
+	// ... Create and initialize the CPU ...
+	_CPU = new cpu();
+	_CPU.init();
+
+	// ... then set the host clock pulse ...
+	_hardwareClockID = setInterval(hostClockPulse, CPU_CLOCK_INTERVAL);
+	// .. and call the OS Kernel Bootstrap routine.
+	krnBootstrap();
 }
 
-function hostBtnHaltOS_click(btn)
-{
-    hostLog("emergency halt", "host");
-    hostLog("Attempting Kernel shutdown.", "host");
-    // Call the OS shutdown routine.
-    krnShutdown();
-    // Stop the JavaScript interval that's simulating our clock pulse.
-    clearInterval(_hardwareClockID);
-    // TODO: Is there anything else we need to do here?
+function hostBtnHaltOS_click(btn) {
+	hostLog("emergency halt", "host");
+	hostLog("Attempting Kernel shutdown.", "host");
+	// Call the OS shutdown routine.
+	krnShutdown();
+	// Stop the JavaScript interval that's simulating our clock pulse.
+	clearInterval(_hardwareClockID);
+	// TODO: Is there anything else we need to do here?
 }
 
-function hostBtnReset_click(btn)
-{
-    // The easiest and most thorough way to do this is to reload (not refresh) the document.
-    location.reload(true);  
-    // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
-    // be reloaded from the server. If it is false or not specified, the browser may reload the 
-    // page from its cache, which is not what we want.
+function hostBtnReset_click(btn) {
+	// The easiest and most thorough way to do this is to reload (not refresh) the document.
+	location.reload(true);
+	// That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
+	// be reloaded from the server. If it is false or not specified, the browser may reload the 
+	// page from its cache, which is not what we want.
 }
 
-function hostBtnStepOn_click(btn)
-{
+//turns stepping on
+function hostBtnStepOn_click(btn) {
 	document.getElementById("btnStepOn").disabled = true;
 	document.getElementById("btnStepOff").disabled = false;
 	document.getElementById("btnStep").disabled = false;
 	step = true;
 }
 
-function hostBtnStepOff_click(btn)
-{
+//turns stepping off
+function hostBtnStepOff_click(btn) {
 	document.getElementById("btnStepOn").disabled = false;
 	document.getElementById("btnStepOff").disabled = true;
 	document.getElementById("btnStep").disabled = true;
 	step = false;
-	
+
 }
 
-function hostBtnStep_click(btn)
-{
-	if (_cpu.isExecuting == false)
-		{
-			krnOnCPUClockPulse();
-		}else{
-			_cpu.iterate();
-		}
+/*
+ * In the event that stepping has been turned on
+ * this will take the place of the automatic clock
+ * and will also control running programs.
+ * It decides which using _cpu.isExecuting, if that
+ * is true, it steps through the program, if that
+ * is false, it steps through normal execution
+ */
+function hostBtnStep_click(btn) {
+	if (_cpu.isExecuting == false) {
+		krnOnCPUClockPulse();
+	} else {
+		_cpu.iterate();
+	}
 }
-
-
-

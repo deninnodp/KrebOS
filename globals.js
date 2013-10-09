@@ -22,10 +22,12 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
                     // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;  
 
-
+//for program execution
 var instruction;
 var start_location;
 
+
+//register displays
 var _pcDisplay;
 var _accDisplay;
 var _xDisplay;
@@ -80,6 +82,7 @@ var CLOCK_ENABLED = true;
 var currentdatetime = new Date();
 var counteri = 0;
 
+//for command history
 var historyarray = new Array();
 var historyindex = 0;
 var chararray;
@@ -100,4 +103,5 @@ var _memManagement = null;
 // For testing...
 var _GLaDOS = null;
 
+//for stepping
 var step = false;

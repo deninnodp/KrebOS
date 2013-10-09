@@ -159,8 +159,10 @@ function shellHandleInput(buffer)
     //
     // Determine the command and execute it.
     //
-    // JavaScript may not support associative arrays in all browsers so we have to
-    // iterate over the command list in attempt to find a match.  TODO: Is there a better way? Probably.
+    // JavaScript may not support associative arrays in all browsers so we have
+	// to
+    // iterate over the command list in attempt to find a match. TODO: Is there
+	// a better way? Probably.
     var index = 0;
     var found = false;
     while (!found && index < this.commandList.length)
@@ -181,12 +183,15 @@ function shellHandleInput(buffer)
     }
     else
     {
-        // It's not found, so check for curses and apologies before declaring the command invalid.
-        if (this.curses.indexOf("[" + rot13(cmd) + "]") >= 0)      // Check for curses.
+        // It's not found, so check for curses and apologies before declaring
+		// the command invalid.
+        if (this.curses.indexOf("[" + rot13(cmd) + "]") >= 0)      // Check for
+																	// curses.
         {
             this.execute(shellCurse);
         }
-        else if (this.apologies.indexOf("[" + cmd + "]") >= 0)      // Check for apologies.
+        else if (this.apologies.indexOf("[" + cmd + "]") >= 0)      // Check for
+																	// apologies.
         {
             this.execute(shellApology);
         }
@@ -207,11 +212,13 @@ function shellParseInput(buffer)
     // 2. Lower-case it.
     buffer = buffer.toLowerCase();
 
-    // 3. Separate on spaces so we can determine the command and command-line args, if any.
+    // 3. Separate on spaces so we can determine the command and command-line
+	// args, if any.
     var tempList = buffer.split(" ");
 
     // 4. Take the first (zeroth) element and use that as the command.
-    var cmd = tempList.shift();  // Yes, you can do that to an array in JavaScript.  See the Queue class.
+    var cmd = tempList.shift();  // Yes, you can do that to an array in
+									// JavaScript. See the Queue class.
     // 4.1 Remove any left-over spaces.
     cmd = trim(cmd);
     // 4.2 Record it in the return value.
@@ -246,14 +253,19 @@ function shellExecute(fn, args)
 
 
 //
-// The rest of these functions ARE NOT part of the Shell "class" (prototype, more accurately), 
-// as they are not denoted in the constructor.  The idea is that you cannot execute them from
-// elsewhere as shell.xxx .  In a better world, and a more perfect JavaScript, we'd be
-// able to make then private.  (Actually, we can. have a look at Crockford's stuff and Resig's JavaScript Ninja cook.)
+// The rest of these functions ARE NOT part of the Shell "class" (prototype,
+// more accurately),
+// as they are not denoted in the constructor. The idea is that you cannot
+// execute them from
+// elsewhere as shell.xxx . In a better world, and a more perfect JavaScript,
+// we'd be
+// able to make then private. (Actually, we can. have a look at Crockford's
+// stuff and Resig's JavaScript Ninja cook.)
 //
 
 //
-// An "interior" or "private" class (prototype) used only inside Shell() (we hope).
+// An "interior" or "private" class (prototype) used only inside Shell() (we
+// hope).
 //
 function ShellCommand()     
 {
@@ -264,7 +276,8 @@ function ShellCommand()
 }
 
 //
-// Another "interior" or "private" class (prototype) used only inside Shell() (we hope).
+// Another "interior" or "private" class (prototype) used only inside Shell()
+// (we hope).
 //
 function UserCommand()
 {
@@ -275,7 +288,8 @@ function UserCommand()
 
 
 //
-// Shell Command Functions.  Again, not part of Shell() class per se', just called from there.
+// Shell Command Functions. Again, not part of Shell() class per se', just
+// called from there.
 //
 function shellInvalidCommand()
 {
@@ -328,7 +342,8 @@ function shellShutdown(args)
      _StdIn.putText("Shutting down...");
      // Call Kernel shutdown routine.
     krnShutdown();   
-    // TODO: Stop the final prompt from being displayed.  If possible.  Not a high priority.  (Damn OCD!)
+    // TODO: Stop the final prompt from being displayed. If possible. Not a high
+	// priority. (Damn OCD!)
 }
 
 function shellCls(args)
@@ -394,7 +409,11 @@ function shellRot13(args)
 {
     if (args.length > 0)
     {
-        _StdIn.putText(args[0] + " = '" + rot13(args[0]) +"'");     // Requires Utils.js for rot13() function.
+        _StdIn.putText(args[0] + " = '" + rot13(args[0]) +"'");     // Requires
+																	// Utils.js
+																	// for
+																	// rot13()
+																	// function.
     }
     else
     {
@@ -452,19 +471,23 @@ function shellBSOD(args)
 function shellLoad(args)
 {
 	
-	//This time around I wrote a much more robust checking program.
-	var input = document.getElementById("taProgramInput").value; //grab input
+	// This time around I wrote a much more robust checking program.
+	var input = document.getElementById("taProgramInput").value; // grab
+																	// input
 	krnTrace(input);
-	input2 = input.replace(/\s/g,''); //remove spaces to make the regex cleaner/simpler
+	input2 = input.replace(/\s/g,''); // remove spaces to make the regex
+										// cleaner/simpler
 	krnTrace(input2);
-	//this pattern will verify not only that the values are hex, but that they are
-	//in the right format: Opcode must be first, and will verify that the correct
-	//argument size is used after as well. 
+	// this pattern will verify not only that the values are hex, but that they
+	// are
+	// in the right format: Opcode must be first, and will verify that the
+	// correct
+	// argument size is used after as well.
 	var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
     var result = patt.exec(input2);
     krnTrace(result);
     
-    //if a valid program cannot be matched, ignore it.
+    // if a valid program cannot be matched, ignore it.
     if (result != input2)
     	{
     		_StdIn.putText("Invalid Program. Please try again.");
@@ -473,18 +496,15 @@ function shellLoad(args)
     		{
 	    		_StdIn.putText("Program Valid. Loading...");
 	    		_StdIn.advanceLine();
-	    		
+	    		//set PID
 	    		current_pid = pid_next;
 	    		
 				_program_queue[pid_next] = new pcb(0,current_pid,0,0,255,0);
 				_current_pcb = _program_queue[pid_next];
-	    		
-				//krnTrace("User entered invalid program, disregarding.");
-				
-	    			    		
-	    		
+	    			    			    		
+	    		//store that bad boy in memory!
 	    		_memManagement.storeProgram(input);
-	    		
+	    		//update registers on load (basically all 0)
 	    		_pcDisplay.innerHTML=_current_pcb.pc;
 	    		_accDisplay.innerHTML=_current_pcb.acc;
 	    		_xDisplay.innerHTML=_current_pcb.x;
@@ -493,13 +513,15 @@ function shellLoad(args)
 	    		
 	    		_StdOut.putText("Program loaded. Type 'run " + pid_next + "' to execute");
 	    		
+	    		//advance next PID
 	    		pid_next = current_pid+1;
     		}
-    //TODO:actually run these
+    // TODO:actually run these
 }
 
 function shellRun(args)
 {
+	//make sure there is an ID
 	if((args[0] == null) || (args[0] > pid_next))
 	{
 		_StdOut.putText("Please enter a proper proccess ID");
