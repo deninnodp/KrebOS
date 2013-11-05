@@ -227,14 +227,16 @@ function krnTrace(msg) {
 
 function krnHandleSystemCall() {
 	krnTrace("handling FF system call");
-	//krnTrace("hi " + _current_pcb.xreg);
+	krnTrace("hi " + _current_pcb.xreg);
 	if (_current_pcb.xreg == 1) {
 	//	krnTrace("hu " + _current_pcb.yreg);
 		//_StdIn.advanceLine();
 		//_StdIn.putText(_current_pcb.yreg);
 
 		var temp = _current_pcb.yreg.toString();
-		temp = temp.replace(/^0+/, '');
+		krnTrace("TEMP1 " + temp);
+		//temp = temp.replace(/^0+/, '');
+		krnTrace("TEMP2 " + temp);
 		_StdIn.putText(temp);
 		_StdIn.advanceLine();
 		//_StdIn.putText(">");
@@ -245,12 +247,15 @@ function krnHandleSystemCall() {
 	//	krnTrace("hu " + _current_pcb.yreg);
 		var startaddress = _current_pcb.yreg;
 	//	krnTrace("startaddress: " + startaddress);
+		
+		
 		var mem_loca = parseInt(startaddress, 16);
+		
 	//	krnTrace("mem_loca: " + mem_loca);
 		var string = "";
 		var char = _memManagement.getAddress(mem_loca);
 		var charencoded = parseInt(char, 16);
-	//	krnTrace("char: " + char);
+		krnTrace("char: " + char);
 	//	krnTrace("charencoded: " + charencoded);
 		while (charencoded != 0) {
 		//	krnTrace("actualchar " + String.fromCharCode(charencoded));
@@ -261,6 +266,7 @@ function krnHandleSystemCall() {
 		//	krnTrace("chare: " + charencoded);
 		}
 		_StdOut.putText(string);
+		_StdOut.advanceLine();
 	}
 }
 

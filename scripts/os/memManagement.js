@@ -19,9 +19,24 @@ function memManagement() {
 
 function memManagementGetAddress(args) {
 
-	var addressindex = args;
-
-	return (_mainMem.Memory[addressindex]);
+	var addressindex;
+	
+	if (_current_pcb.pid == 0)
+		{
+			addressindex = args;
+	//		krnTrace("HOOOO " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}else if (_current_pcb.pid == 1)
+		{
+			addressindex = args;
+//			krnTrace("HOOOO1 " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}else if (_current_pcb.pid == 2)
+		{
+			addressindex = args;
+//			krnTrace("HOOOO2 " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}
 
 }
 

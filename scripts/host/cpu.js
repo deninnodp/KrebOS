@@ -108,15 +108,15 @@ function cpu() {
 			var strConst = _memManagement.getAddress(current_pc + 1);
 
 			krnTrace("CNST " + strConst);
-			if (strConst == "4F" || strConst == "4E") {
+		/*	if (strConst == "4F" || strConst == "4E") {
 				this.pcb.accum = strConst;
-			} else {
-				var value = parseInt(strConst, 10);
+			} else {*/
+				var value = parseInt(strConst, 16);
 
 				this.pcb.accum = value; // set accum to value
 
 				krnTrace("ACC " + this.pcb.accum);
-			}
+		//}
 			// need to increment pc- will skip the variable
 			this.pcb.pc++;
 
@@ -168,7 +168,7 @@ function cpu() {
 
 			var strConst = _memManagement.getAddress(current_pc + 1);
 
-			var value = parseInt(strConst);
+			var value = parseInt(strConst, 16);
 
 			this.pcb.xreg = value; // set accum to value
 
@@ -182,9 +182,9 @@ function cpu() {
 
 			var strConst = _memManagement.getAddress(current_pc + 1);
 
-			var value = parseInt(strConst);
-
-			this.pcb.yreg = value; // set accum to value
+			var value = parseInt(strConst, 10);
+			krnTrace("my dad " + strConst);
+			this.pcb.yreg = strConst; // set accum to value
 
 			// need to increment pc- will skip the variable
 			this.pcb.pc++;
@@ -194,7 +194,7 @@ function cpu() {
 
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
-
+			//krnTrace("my dad " + mem_loc);
 			this.pcb.yreg = _mainMem.Memory[mem_loc];
 
 			this.pcb.pc += 2;
@@ -220,7 +220,7 @@ function cpu() {
 			//this is useless, it's the DO NOTHING opcode
 
 		} else if (instruction == "D0") {
-			//krnTrace("WE GOT D0 " + this.pcb.Zflag);
+			krnTrace("WE GOT D0 " + this.pcb.Zflag);
 			if (this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
 			{
 				var location = _memManagement.getAddress(current_pc + 1); //_memManagement.getAddress(current_pc + 2) +
@@ -228,16 +228,17 @@ function cpu() {
 				var mem_loc = parseInt(location, 16);
 				//	krnTrace("memloc " + mem_loc);
 				//	krnTrace("before: " + this.pcb.pc);
-				this.pcb.pc = this.pcb.pc + mem_loc;
+				this.pcb.pc = this.pcb.pc + mem_loc + 1;
 				//	krnTrace("after: " + this.pcb.pc);
 
 				if (this.pcb.pc > 255) {
-					this.pcb.pc = this.pcb.pc - 255;
+					this.pcb.pc = this.pcb.pc - 256;
 				}
 				krnTrace("after2: " + this.pcb.pc);
 			} else //just inc pc as normal
 			{
-				this.pc++;
+				//krnTrace(this.pcb.pc);
+				this.pcb.pc++;
 			}
 
 		} else if (instruction == "EE") {
@@ -253,7 +254,7 @@ function cpu() {
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 
 			var mem_loc = parseInt(location, 16); // get hex value
-
+			//krnTrace("memloc " + )
 			var memByte = _mainMem.Memory[mem_loc];
 
 			if (this.pcb.xreg == memByte) {
