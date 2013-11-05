@@ -127,6 +127,7 @@ var rrquantum = 6;
 //the ready queue
 var _readyqueue = new Array();
 
+var _scheduler;
 
 
 

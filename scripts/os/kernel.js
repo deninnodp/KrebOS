@@ -43,6 +43,8 @@ function krnBootstrap() // Page 8.
 	_cpu = new cpu();
 	_cpu.init();
 	
+	_scheduler = new scheduler();
+	
 	//_readyqueue = new Queue();
 	
 

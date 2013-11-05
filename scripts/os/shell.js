@@ -575,7 +575,7 @@ function shellRun(args)
 		if (rdytorun == true)
 			{
 				_current_pcb = _program_queue[args[0]];
-				_current_pcb.state = "RUNNING";
+				//_current_pcb.state = "RUNNING";
 				_readyqueue.push(_current_pcb);
 				//krnTrace(_readyqueue[0].state);
 				_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
@@ -598,19 +598,24 @@ function shellRunAll()
 			if (_program_queue[0] != null)
 				{
 				_current_pcb = _program_queue[0];
-				_cpu.exec();
+				_current_pcb.state = "WAITING";
+				_readyqueue.push(_current_pcb);
 				}
 			if (_program_queue[1] != null)
 			{
 				_current_pcb = _program_queue[1];
-				_cpu.exec();
+				_current_pcb.state = "WAITING";
+				_readyqueue.push(_current_pcb);
 			}
 			if (_program_queue[2] != null)
 			{
 				_current_pcb = _program_queue[2];
-				_cpu.exec();
+				_current_pcb.state = "WAITING";
+				_readyqueue.push(_current_pcb);
 			}
-			_program_queue[current_pid] = _current_pcb;
+			
+			_cpu.exec();
+			//_program_queue[current_pid] = _current_pcb;
 			//}
 	}else{
 		_StdIn.advanceLine();
@@ -701,7 +706,7 @@ function shellKill(args)
 					//_current_pcb = this.pcb
 					_current_pcb.state = "TERMINATED";
 					_current_pcb.display();
-					_readyqueue.shift();
+					//_readyqueue.shift();
 					_StdIn.putText("Program " + args + " terminated by user.");
 					_StdIn.advanceLine();
 				}else{

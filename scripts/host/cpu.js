@@ -44,8 +44,12 @@ function cpu() {
 
 	this.exec = function() {
 		// gets initial info
+		
+		_current_pcb = _readyqueue.shift();
+		
 		this.pcb = _current_pcb;
 
+		this.pcb.state = "RUNNING";
 		start_location = _memManagement.getPC();
 
 		// get first instruction
@@ -58,6 +62,24 @@ function cpu() {
 	// need to restore the info in the array of pid/current pid
 
 	this.iterate = function() {
+		
+		if (_scheduler.executionmode == "FCFS")
+			{
+				if (this.pcb.state == "TERMINATED")
+					{
+					krnTrace("WASFSDGFG");
+						if (_readyqueue.length != 0)
+							{
+								_scheduler.contextSwitch();
+							}else{
+								_cpu.isExecuting = false;
+							}
+					}
+			}
+		
+		if (_cpu.isExecuting)
+			{
+		
 		
 		//krnTrace("LOOKY HERE " + instruction);
 		
@@ -77,8 +99,8 @@ function cpu() {
 			_current_pcb = this.pcb
 			_current_pcb.state = "TERMINATED";
 			_current_pcb.display();
-			_cpu.isExecuting = false;
-			_readyqueue.shift();
+			//_cpu.isExecuting = false;
+			//_readyqueue.shift();
 
 		} else if (instruction == "A9") {
 			// A9 means take next value and store in accum.
@@ -250,8 +272,10 @@ function cpu() {
 		instruction = _memManagement.getAddress(current_location);
 
 		_current_pcb = this.pcb;
+		_current_pcb.display();
 		_mainMem.display();
 
+			}
 	}
 
 	// returns memory as a string
