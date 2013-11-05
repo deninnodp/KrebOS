@@ -33,6 +33,13 @@ var _accDisplay;
 var _xDisplay;
 var _yDisplay;
 var _zDisplay;
+
+//pcb display
+var _stateDisplay;
+var _baseDisplay;
+var _limitDisplay;
+
+
 //
 // Global Variables
 //
@@ -107,3 +114,14 @@ var _GLaDOS = null;
 var step = false;
 
 var lastmemspace = 0;
+
+//default rr quantum
+var rrquantum = 6;
+
+//the ready queue
+var _readyqueue;
+
+
+
+
+

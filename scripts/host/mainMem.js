@@ -38,7 +38,7 @@ function mainSetMem(args, base) {
 	for (x in argsArray) {
 		var offset = parseInt(x) + base; //add the base to current location
 		
-		krnTrace(base);
+		//krnTrace(base);
 		this.Memory[offset] = argsArray[x];
 	}
 

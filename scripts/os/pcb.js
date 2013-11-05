@@ -15,7 +15,7 @@ function pcb(state, pid, pc, base, limit, priority)
     this.limit = limit;
 	this.priority = priority;
 	this.inMemory = true; //all newly created pcb for procs will be in memory by default.
-    
+	
     //initialize the registers to 0 since upon initial creation, the state isn't being saved into the pcb
     this.acc = 0;
     this.x = 0;
@@ -38,6 +38,10 @@ function pcb(state, pid, pc, base, limit, priority)
     
     this.display = function()
     {
-    	krnTrace("PC: " + this.pc + " ACC: " + this.acc + " X: " + this.x + " Y: " + this.y + " STATE: " + this.state + " Z: " + this.z + " BASE: " + this.base + " LIMIT: " + this.limit);
+    	//krnTrace("PC: " + this.pc + " ACC: " + this.acc + " X: " + this.x + " Y: " + this.y + " STATE: " + this.state + " Z: " + this.z + " BASE: " + this.base + " LIMIT: " + this.limit);
+    	_stateDisplay.innerHTML = this.state;
+    	_baseDisplay.innerHTML = this.base;
+    	_limitDisplay.innerHTML = this.limit;
+    	
     }
 }

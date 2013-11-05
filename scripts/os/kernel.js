@@ -42,12 +42,19 @@ function krnBootstrap() // Page 8.
 
 	_cpu = new cpu();
 	_cpu.init();
+	
+	_readyqueue = new Queue();
+	
 
 	_pcDisplay = document.getElementById("tdPC");
 	_accDisplay = document.getElementById("tdACC");
 	_xDisplay = document.getElementById("tdX");
 	_yDisplay = document.getElementById("tdY");
 	_zDisplay = document.getElementById("tdZ");
+	
+	_stateDisplay = document.getElementById("tdSTATE");
+	_baseDisplay = document.getElementById("tdBASE");
+	_limitDisplay = document.getElementById("tdLIMIT");
 
 	// Load the Keyboard Device Driver
 	krnTrace("Loading the keyboard device driver.");

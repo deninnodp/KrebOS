@@ -121,6 +121,13 @@ function shellInit() {
     sc.description = "<pid> - run a program already in memory.";
     sc.function = shellRun;
     this.commandList[this.commandList.length] = sc;
+    
+    // runall <pid>
+	sc = new ShellCommand();
+    sc.command = "runall";
+    sc.description = "run all programs already in memory.";
+    sc.function = shellRunAll;
+    this.commandList[this.commandList.length] = sc;
 
     // status
     sc = new ShellCommand();
@@ -470,7 +477,7 @@ function shellBSOD(args)
 
 function shellLoad(args)
 {
-	if (args == null)
+	if (args == null || args == '' || args == ' ')
 		{
 			_StdIn.putText("No PID suplied.");
 		}else{
@@ -501,7 +508,7 @@ function shellLoad(args)
     if (result != input2)
     	{
     		_StdIn.putText("Invalid Program. Please try again.");
-    		krnTrace("User entered invalid program, disregarding.");
+    	//	krnTrace("User entered invalid program, disregarding.");
     	}else if (result == input2)
     		{
 	    		_StdIn.putText("Program Valid. Loading...");
@@ -547,6 +554,8 @@ function shellRun(args)
 		if (rdytorun == true)
 			{
 				_current_pcb = _program_queue[args[0]];
+				_current_pcb.state = "RUNNING";
+				
 				_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
 				_program_queue[current_pid] = _current_pcb;
 			}else{
@@ -554,6 +563,38 @@ function shellRun(args)
 				_StdIn.putText("Load a program first!");
 			}
 	}
+}
+
+//everyone runs, its like a race
+function shellRunAll()
+{
+	if (rdytorun == true)
+	{
+		//for (var ij=0;ij<_program_queue.length;ij++)
+		//	{
+		//	krnTrace("HOLA");
+			if (_program_queue[0] != null)
+				{
+				_current_pcb = _program_queue[0];
+				_cpu.exec();
+				}
+			if (_program_queue[1] != null)
+			{
+				_current_pcb = _program_queue[1];
+				_cpu.exec();
+			}
+			if (_program_queue[2] != null)
+			{
+				_current_pcb = _program_queue[2];
+				_cpu.exec();
+			}
+			_program_queue[current_pid] = _current_pcb;
+			//}
+	}else{
+		_StdIn.advanceLine();
+		_StdIn.putText("Load a program first!");
+	}
+	
 }
 
 

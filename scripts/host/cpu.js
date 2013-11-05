@@ -72,6 +72,7 @@ function cpu() {
 		if (instruction == "00") {
 			//we done, yo
 			_current_pcb = this.pcb
+			_current_pcb.state = "TERMINATED";
 			_current_pcb.display();
 			_cpu.isExecuting = false;
 
@@ -244,7 +245,7 @@ function cpu() {
 		var current_location = _memManagement.getPC();
 		instruction = _memManagement.getAddress(current_location);
 
-		_current_pcb = this.pcb
+		_current_pcb = this.pcb;
 		_mainMem.display();
 
 	}
@@ -259,7 +260,7 @@ function cpu() {
 				output = output + this.memory[x] + " ";
 			}
 		}
-		return (output)
+		return (output);
 	}
 
 }
