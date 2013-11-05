@@ -470,7 +470,10 @@ function shellBSOD(args)
 
 function shellLoad(args)
 {
-	
+	if (args == null)
+		{
+			_StdIn.putText("No PID suplied.");
+		}else{
 	// This time around I wrote a much more robust checking program.
 	var input = document.getElementById("taProgramInput").value; // grab
 																	// input
@@ -504,26 +507,33 @@ function shellLoad(args)
 	    		_StdIn.putText("Program Valid. Loading...");
 	    		_StdIn.advanceLine();
 	    		//set PID
-	    		current_pid = pid_next;
-	    		
-				_program_queue[pid_next] = new pcb(0,current_pid,0,0,255,0);
-				_current_pcb = _program_queue[pid_next];
-	    			    			    		
-	    		//store that bad boy in memory!
-	    		_memManagement.storeProgram(input);
-	    		//update registers on load (basically all 0)
-	    		_pcDisplay.innerHTML=_current_pcb.pc;
-	    		_accDisplay.innerHTML=_current_pcb.acc;
-	    		_xDisplay.innerHTML=_current_pcb.x;
-	    		_yDisplay.innerHTML=_current_pcb.y;
-	    		_zDisplay.innerHTML=_current_pcb.z;
-	    		rdytorun = true;
-	    		_StdOut.putText("Program loaded. Type 'run " + pid_next + "' to execute");
-	    		
-	    		//advance next PID
-	    		pid_next = current_pid+1;
+	    		if (args < 0 || args > 2)
+	    			{
+	    			_StdIn.putText("Error: Invalid PID. Valid: (0-2)");
+	    			}else{
+			    		//current_pid = pid_next;
+			    		current_pid = args;
+			    		
+						_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
+						_current_pcb = _program_queue[current_pid];
+			    			    			    		
+			    		//store that bad boy in memory!
+			    		_memManagement.storeProgram(input, current_pid);
+			    		//update registers on load (basically all 0)
+			    		_pcDisplay.innerHTML=_current_pcb.pc;
+			    		_accDisplay.innerHTML=_current_pcb.acc;
+			    		_xDisplay.innerHTML=_current_pcb.x;
+			    		_yDisplay.innerHTML=_current_pcb.y;
+			    		_zDisplay.innerHTML=_current_pcb.z;
+			    		rdytorun = true;
+			    		_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
+			    		
+			    		//advance next PID
+			    		//pid_next = current_pid+1;
+	    			}
     		}
-    // TODO:actually run these
+    
+		}
 }
 
 function shellRun(args)

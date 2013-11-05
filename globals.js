@@ -105,3 +105,5 @@ var _GLaDOS = null;
 
 //for stepping
 var step = false;
+
+var lastmemspace = 0;

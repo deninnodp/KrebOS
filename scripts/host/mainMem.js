@@ -17,7 +17,7 @@ function mainMem() {
 function mainMemInit() {
 	//init the main memory area
 	var i = 0;
-	while (i <= 256) {
+	while (i <= 768) {
 		this.Memory[i] = "00";
 		i++;
 	}
@@ -31,12 +31,14 @@ function mainMemInit() {
 //changes a location in memory
 function mainSetMem(args, base) {
 
-	base = parseInt(base, 16)
+	base = parseInt(base, 10);
 
 	var argsArray = args.split(' ');
 
 	for (x in argsArray) {
 		var offset = parseInt(x) + base; //add the base to current location
+		
+		krnTrace(base);
 		this.Memory[offset] = argsArray[x];
 	}
 
@@ -55,7 +57,7 @@ function mainMemDisplay() {
 	var i = 0;
 	var line = "0000: ";
 	var endofline = 0;
-	while (i <= 256) {
+	while (i <= 768) {
 		//checks if at end of line
 		if (endofline == 8) {
 			//	krnTrace("in end of line");

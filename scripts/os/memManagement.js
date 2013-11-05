@@ -25,10 +25,19 @@ function memManagementGetAddress(args) {
 
 }
 
-function memManagementStoreProgram(args) {
+function memManagementStoreProgram(input, pid) {
 	
-	//store at 0000 for now
-	_mainMem.set(args, "0000");
+	
+	if (pid == 0)
+	{
+		_mainMem.set(input, "0000");
+
+	}else if (pid == 1){
+
+		_mainMem.set(input, "0256");
+	}else if (pid == 2){
+		_mainMem.set(input, "0512");
+	}
 
 }
 
