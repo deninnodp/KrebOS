@@ -35,9 +35,15 @@ var _yDisplay;
 var _zDisplay;
 
 //pcb display
-var _stateDisplay;
-var _baseDisplay;
-var _limitDisplay;
+var _stateDisplay0;
+var _baseDisplay0;
+var _limitDisplay0;
+var _stateDisplay1;
+var _baseDisplay1;
+var _limitDisplay1;
+var _stateDisplay2;
+var _baseDisplay2;
+var _limitDisplay2;
 
 
 //
@@ -119,7 +125,7 @@ var lastmemspace = 0;
 var rrquantum = 6;
 
 //the ready queue
-var _readyqueue;
+var _readyqueue = new Array();
 
 
 

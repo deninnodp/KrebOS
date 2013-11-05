@@ -108,10 +108,10 @@ function shellInit() {
     sc.function = shellBSOD;
     this.commandList[this.commandList.length] = sc;
     
-    // load
+    // load <pid>
     sc = new ShellCommand();
     sc.command = "load";
-    sc.description = "Loads a user program from the program input textarea into memory.";
+    sc.description = "<pid> - Loads a user program from the program input textarea into memory.";
     sc.function = shellLoad;
     this.commandList[this.commandList.length] = sc;
     
@@ -125,15 +125,36 @@ function shellInit() {
     // runall <pid>
 	sc = new ShellCommand();
     sc.command = "runall";
-    sc.description = "run all programs already in memory.";
+    sc.description = "- run all programs already in memory.";
     sc.function = shellRunAll;
     this.commandList[this.commandList.length] = sc;
 
     // status
     sc = new ShellCommand();
     sc.command = "status";
-    sc.description = "- sets the status message on the taskbar";
+    sc.description = "- sets the status message on the taskbar.";
     sc.function = shellSetStatus;
+    this.commandList[this.commandList.length] = sc;
+    
+    // set quantum
+    sc = new ShellCommand();
+    sc.command = "quantum";
+    sc.description = "<int> - sets the round robin quantum (default 6)";
+    sc.function = shellSetQuantum;
+    this.commandList[this.commandList.length] = sc;
+    
+    // ps
+    sc = new ShellCommand();
+    sc.command = "ps";
+    sc.description = "lists running processes.";
+    sc.function = shellps;
+    this.commandList[this.commandList.length] = sc;
+    
+    // kill
+    sc = new ShellCommand();
+    sc.command = "kill";
+    sc.description = "<pid> - kills a process with the given pid.";
+    sc.function = shellKill;
     this.commandList[this.commandList.length] = sc;
     
     // processes - list the running processes and their IDs
@@ -555,7 +576,8 @@ function shellRun(args)
 			{
 				_current_pcb = _program_queue[args[0]];
 				_current_pcb.state = "RUNNING";
-				
+				_readyqueue.push(_current_pcb);
+				//krnTrace(_readyqueue[0].state);
 				_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
 				_program_queue[current_pid] = _current_pcb;
 			}else{
@@ -628,4 +650,76 @@ function shellSetStatus(args)
   _TaskBar.putText("Status: " + month + "/" + day + "/" + year + " " + hours + ":" + minutes + " " + statusMessage);
  
 }
+
+function shellSetQuantum(args)
+{
+	if (isNumber(args) == true)
+		{
+			rrquantum = args;
+			_StdIn.putText("Set quantum to " + args + ".");
+		
+		}else{
+			_StdIn.putText("Please enter a number.");
+			}
+
+}
+
+function shellps()
+{
+
+	if (_readyqueue.length != 0)
+		{
+			for(var cf=0;cf<_readyqueue.length;cf++)
+				{
+				
+					if (_readyqueue[cf].state == "RUNNING")
+						{
+							_StdIn.putText("Running: " + _readyqueue[cf].pid);
+							_StdIn.advanceLine();
+						}else{
+							_StdIn.putText("Running: None");
+							_StdIn.advanceLine();
+						}
+				}
+		}else{
+			_StdIn.putText("Running: None");
+			_StdIn.advanceLine();
+		}
+}
+
+function shellKill(args)
+{
+	if (_cpu.isExecuting)
+		{
+			//krnTrace("DFSDGFDGHD " + _current_pcb.pid);
+			//krnTrace("DFSDGFDGHD2 " + args);
+			if (parseInt(_current_pcb.pid) == parseInt(args))
+				{
+					_cpu.isExecuting = false;
+					_StdIn.putText("Killing process " + args + "...");
+					_StdIn.advanceLine();
+					//_current_pcb = this.pcb
+					_current_pcb.state = "TERMINATED";
+					_current_pcb.display();
+					_readyqueue.shift();
+					_StdIn.putText("Program " + args + " terminated by user.");
+					_StdIn.advanceLine();
+				}else{
+					_StdIn.putText("Error: Given process not running.");
+					_StdIn.advanceLine();
+				}
+		
+		}else{
+			_StdIn.putText("Error: No processes running.");
+			_StdIn.advanceLine();
+		}
+}
+
+
+function isNumber(n) {
+	  
+	return !isNaN(parseInt(n)) && isFinite(n);
+}
+
+
 

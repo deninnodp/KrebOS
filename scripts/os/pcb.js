@@ -39,9 +39,22 @@ function pcb(state, pid, pc, base, limit, priority)
     this.display = function()
     {
     	//krnTrace("PC: " + this.pc + " ACC: " + this.acc + " X: " + this.x + " Y: " + this.y + " STATE: " + this.state + " Z: " + this.z + " BASE: " + this.base + " LIMIT: " + this.limit);
-    	_stateDisplay.innerHTML = this.state;
-    	_baseDisplay.innerHTML = this.base;
-    	_limitDisplay.innerHTML = this.limit;
+    	if (this.pid == 0)
+    		{
+	        	_stateDisplay0.innerHTML = this.state;
+	        	_baseDisplay0.innerHTML = this.base;
+	        	_limitDisplay0.innerHTML = this.limit;
+    		}else if (this.pid == 1){
+	        	_stateDisplay1.innerHTML = this.state;
+	        	_baseDisplay1.innerHTML = this.base;
+	        	_limitDisplay1.innerHTML = this.limit;
+    		}else if (this.pid == 2){
+	        	_stateDisplay2.innerHTML = this.state;
+	        	_baseDisplay2.innerHTML = this.base;
+	        	_limitDisplay2.innerHTML = this.limit;
+    		}
+    	
+
     	
     }
 }

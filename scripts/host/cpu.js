@@ -58,6 +58,7 @@ function cpu() {
 	// need to restore the info in the array of pid/current pid
 
 	this.iterate = function() {
+		
 		//krnTrace("LOOKY HERE " + instruction);
 		
 		//Update the register displays
@@ -66,6 +67,8 @@ function cpu() {
 		_xDisplay.innerHTML = _current_pcb.xreg;
 		_yDisplay.innerHTML = _current_pcb.yreg;
 		_zDisplay.innerHTML = _current_pcb.Zflag;
+		
+		_current_pcb.display();
 
 		var current_pc = _memManagement.getPC();
 
@@ -75,6 +78,7 @@ function cpu() {
 			_current_pcb.state = "TERMINATED";
 			_current_pcb.display();
 			_cpu.isExecuting = false;
+			_readyqueue.shift();
 
 		} else if (instruction == "A9") {
 			// A9 means take next value and store in accum.
