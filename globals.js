@@ -34,6 +34,24 @@ var _xDisplay;
 var _yDisplay;
 var _zDisplay;
 
+var _pcDisplay0;
+var _accDisplay0;
+var _xDisplay0;
+var _yDisplay0;
+var _zDisplay0;
+
+var _pcDisplay1;
+var _accDisplay1;
+var _xDisplay1;
+var _yDisplay1;
+var _zDisplay1;
+
+var _pcDisplay2;
+var _accDisplay2;
+var _xDisplay2;
+var _yDisplay2;
+var _zDisplay2;
+
 //pcb display
 var _stateDisplay0;
 var _baseDisplay0;

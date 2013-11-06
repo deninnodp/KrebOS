@@ -44,14 +44,30 @@ function pcb(state, pid, pc, base, limit, priority)
 	        	_stateDisplay0.innerHTML = this.state;
 	        	_baseDisplay0.innerHTML = this.base;
 	        	_limitDisplay0.innerHTML = this.limit;
+	        	_pcDisplay0.innerHTML = this.pc;
+	        	_accDisplay0.innerHTML = this.acc;
+	        	_xDisplay0.innerHTML = this.x;
+	        	_yDisplay0.innerHTML = this.y;
+	        	_zDisplay0.innerHTML = this.z;
+	        	
     		}else if (this.pid == 1){
 	        	_stateDisplay1.innerHTML = this.state;
 	        	_baseDisplay1.innerHTML = this.base;
 	        	_limitDisplay1.innerHTML = this.limit;
+	        	_pcDisplay1.innerHTML = this.pc;
+	        	_accDisplay1.innerHTML = this.acc;
+	        	_xDisplay1.innerHTML = this.x;
+	        	_yDisplay1.innerHTML = this.y;
+	        	_zDisplay1.innerHTML = this.z;
     		}else if (this.pid == 2){
 	        	_stateDisplay2.innerHTML = this.state;
 	        	_baseDisplay2.innerHTML = this.base;
 	        	_limitDisplay2.innerHTML = this.limit;
+	        	_pcDisplay2.innerHTML = this.pc;
+	        	_accDisplay2.innerHTML = this.acc;
+	        	_xDisplay2.innerHTML = this.x;
+	        	_yDisplay2.innerHTML = this.y;
+	        	_zDisplay2.innerHTML = this.z;
     		}
     	
 

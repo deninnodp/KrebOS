@@ -54,6 +54,24 @@ function krnBootstrap() // Page 8.
 	_yDisplay = document.getElementById("tdY");
 	_zDisplay = document.getElementById("tdZ");
 	
+	_pcDisplay0 = document.getElementById("tdPC0");
+	_accDisplay0 = document.getElementById("tdACC0");
+	_xDisplay0 = document.getElementById("tdX0");
+	_yDisplay0 = document.getElementById("tdY0");
+	_zDisplay0 = document.getElementById("tdZ0");
+	
+	_pcDisplay1 = document.getElementById("tdPC1");
+	_accDisplay1 = document.getElementById("tdACC1");
+	_xDisplay1 = document.getElementById("tdX1");
+	_yDisplay1 = document.getElementById("tdY1");
+	_zDisplay1 = document.getElementById("tdZ1");
+	
+	_pcDisplay2 = document.getElementById("tdPC2");
+	_accDisplay2 = document.getElementById("tdACC2");
+	_xDisplay2 = document.getElementById("tdX2");
+	_yDisplay2 = document.getElementById("tdY2");
+	_zDisplay2 = document.getElementById("tdZ2");
+	
 	_stateDisplay0 = document.getElementById("tdSTATE0");
 	_baseDisplay0 = document.getElementById("tdBASE0");
 	_limitDisplay0 = document.getElementById("tdLIMIT0");
