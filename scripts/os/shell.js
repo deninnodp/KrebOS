@@ -111,7 +111,7 @@ function shellInit() {
     // load <pid>
     sc = new ShellCommand();
     sc.command = "load";
-    sc.description = "<pid> - Loads a user program from the program input textarea into memory.";
+    sc.description = "Loads a user program from the program input textarea into memory.";
     sc.function = shellLoad;
     this.commandList[this.commandList.length] = sc;
     
@@ -503,12 +503,9 @@ function shellBSOD(args)
 	krnTrapError("User evoked bluescreen command!");
 }
 
-function shellLoad(args)
+function shellLoad()
 {
-	if (args == null || args == '' || args == ' ')
-		{
-			_StdIn.putText("No PID suplied.");
-		}else{
+
 	// This time around I wrote a much more robust checking program.
 	var input = document.getElementById("taProgramInput").value; // grab
 																	// input
@@ -542,33 +539,34 @@ function shellLoad(args)
 	    		_StdIn.putText("Program Valid. Loading...");
 	    		_StdIn.advanceLine();
 	    		//set PID
-	    		if (args < 0 || args > 2)
+
+	    		if (pid_next == 3)
 	    			{
-	    			_StdIn.putText("Error: Invalid PID. Valid: (0-2)");
-	    			}else{
-			    		//current_pid = pid_next;
-			    		current_pid = args;
-			    		
-						_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
-						_current_pcb = _program_queue[current_pid];
-			    			    			    		
-			    		//store that bad boy in memory!
-			    		_memManagement.storeProgram(input, current_pid);
-			    		//update registers on load (basically all 0)
-			    		_pcDisplay.innerHTML=_current_pcb.pc;
-			    		_accDisplay.innerHTML=_current_pcb.acc;
-			    		_xDisplay.innerHTML=_current_pcb.x;
-			    		_yDisplay.innerHTML=_current_pcb.y;
-			    		_zDisplay.innerHTML=_current_pcb.z;
-			    		rdytorun = true;
-			    		_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
-			    		
-			    		//advance next PID
-			    		//pid_next = current_pid+1;
+	    				pid_next = 0;
 	    			}
-    		}
-    
-		}
+	    		
+	    		current_pid = pid_next;
+	    		krnTrace("PID" + current_pid);
+	    		//current_pid = args;
+
+	    		_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
+	    		_current_pcb = _program_queue[current_pid];
+
+	    		//store that bad boy in memory!
+	    		_memManagement.storeProgram(input, current_pid);
+	    		//update registers on load (basically all 0)
+	    		_pcDisplay.innerHTML=_current_pcb.pc;
+	    		_accDisplay.innerHTML=_current_pcb.acc;
+	    		_xDisplay.innerHTML=_current_pcb.x;
+	    		_yDisplay.innerHTML=_current_pcb.y;
+	    		_zDisplay.innerHTML=_current_pcb.z;
+	    		rdytorun = true;
+	    		_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
+
+	    		//advance next PID
+	    		pid_next = current_pid+1;
+	    	}
+
 }
 
 function shellRun(args)
@@ -605,23 +603,29 @@ function shellRunAll()
 			if (_program_queue[0] != null)
 				{
 				_current_pcb = _program_queue[0];
-				_current_pcb.state = "WAITING";
+				_current_pcb.state = "READY";
+				_current_pcb.pid = 0;
+				_current_pcb.display();
 				_readyqueue.push(_current_pcb);
 				}
 			if (_program_queue[1] != null)
 			{
 				_current_pcb = _program_queue[1];
-				_current_pcb.state = "WAITING";
+				_current_pcb.state = "READY";
 				_current_pcb.base = "256";
 				_current_pcb.limit = "511";
+				_current_pcb.pid = 1;
+				_current_pcb.display();
 				_readyqueue.push(_current_pcb);
 			}
 			if (_program_queue[2] != null)
 			{
 				_current_pcb = _program_queue[2];
-				_current_pcb.state = "WAITING";
+				_current_pcb.state = "READY";
 				_current_pcb.base = "512";
 				_current_pcb.limit = "767";
+				_current_pcb.pid = 2;
+				_current_pcb.display();
 				_readyqueue.push(_current_pcb);
 			}
 			

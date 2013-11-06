@@ -35,7 +35,7 @@
 
    <!-- Other Routines -->
    <script type="text/javascript" src="scripts/utils.js"></script>
-   <!-- script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script -->
+   <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
 </head>
 
 <body onload="hostInit();">
@@ -96,12 +96,15 @@
              onclick="hostBtnStep_click(this);">
    </div>
 
+	
+
    <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
       <canvas id="display"
               width="500px"
               height="500px"
               tabindex="3">
       </canvas>
+      
       
       <canvas id="taskBar"
         width="500"
@@ -111,6 +114,12 @@
 	<table class="hwLog">
 		<tr>
 			<tr>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
 				<th colspan="4">CPU Registers</th>
 			</tr>
 				<th class="cpuLogLabel">PC</th>
@@ -157,10 +166,14 @@
 			
 	</table>
       
-    <div>
-<br><br><br>
+     
+   </div>
+   
+   <div name="mainMemDisplay" id="mainMemDisplay" class="mainMemDisplay" style="width:300px;height:600px;line-height:3em;overflow:scroll;float:left;line-height:120%">
+	
+
 		       <b> MEMORY LANE </b>
-	<div name="mainMemDisplay" id="mainMemDisplay" class="mainMemDisplay">
+	
 		          
 		<div>0000: 00 00 00 00 00 00 00 00 </div>
 		<div>0008: 00 00 00 00 00 00 00 00 </div>
@@ -262,11 +275,6 @@
 		<div>0760: 00 00 00 00 00 00 00 00 </div>
 		
 	</div>
-</div>  
-      
-      
-   </div>
-   
    
    <div id="divLog" style="margin-left:520px;">
       <label>
@@ -279,6 +287,8 @@
          ></textarea>
       </label>
    </div>
+   
+   
 
    <div id="divUserProgramInput" style="margin-left:520px;">
       <label>
@@ -293,6 +303,9 @@
    </div>
 
 </div>
+
+
+	
 
 </body>
 </html>

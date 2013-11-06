@@ -40,7 +40,7 @@ function pcb(state, pid, pc, base, limit, priority)
     {
     	//krnTrace("PC: " + this.pc + " ACC: " + this.acc + " X: " + this.x + " Y: " + this.y + " STATE: " + this.state + " Z: " + this.z + " BASE: " + this.base + " LIMIT: " + this.limit);
     	if (this.pid == 0)
-    		{
+    		{	
 	        	_stateDisplay0.innerHTML = this.state;
 	        	_baseDisplay0.innerHTML = this.base;
 	        	_limitDisplay0.innerHTML = this.limit;

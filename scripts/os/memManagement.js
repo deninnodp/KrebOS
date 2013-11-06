@@ -25,17 +25,17 @@ function memManagementGetAddress(args) {
 	if (_current_pcb.pid == 0)
 		{
 			addressindex = args;
-			krnTrace("HOOOOA " + addressindex);
+		//	krnTrace("HOOOOA " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.pid == 1)
 		{
 			addressindex = args;
-			krnTrace("HOOOOA1 " + addressindex);
+	//		krnTrace("HOOOOA1 " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.pid == 2)
 		{
 			addressindex = args;
-			krnTrace("HOOOOA2 " + addressindex);
+//		krnTrace("HOOOOA2 " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}
 
@@ -83,7 +83,7 @@ function memManagementStoreProgram(input, pid) {
 function memManagementGetPC() {
 	var output = parseInt(_current_pcb.base) + parseInt(_current_pcb.pc);
 	//krnTrace("THIS THIS THIS THIS " + _current_pcb.pc);
-	krnTrace("BASE: " + _current_pcb.base + "PC: " + _current_pcb.pc);
+//	krnTrace("BASE: " + _current_pcb.base + "PC: " + _current_pcb.pc);
 	return (output);
 
 }

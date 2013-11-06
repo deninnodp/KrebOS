@@ -58,8 +58,11 @@ function cpu() {
 		
 		
 		this.pcb = _current_pcb;
+		
+		krnTrace("yo " + this.pcb.pid);
 
-		this.pcb.state = "RUNNING";
+		
+				this.pcb.state = "RUNNING";
 		start_location = _memManagement.getPC();
 
 		// get first instruction
@@ -137,11 +140,11 @@ function cpu() {
 		var current_pc = _memManagement.getPC();
 
 		//this.pcb.pc = current_pc;
-		krnTrace("WINNER: " + current_pc);
+	//	krnTrace("WINNER: " + current_pc);
 		
 		if (instruction == "00") {
 			//we done, yo
-			krnTrace("WE DONE YO");
+		//	krnTrace("WE DONE YO");
 			_current_pcb = this.pcb
 			_current_pcb.state = "TERMINATED";
 			_current_pcb.display();
@@ -175,14 +178,14 @@ function cpu() {
 
 			// swap the locations - little n-dian
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-			krnTrace("woop " + location);
+		//	krnTrace("woop " + location);
 			var mem_loc = parseInt(location, 16); // get hex value
-			krnTrace("woop2 " + mem_loc);
-			krnTrace("GOING IN " + this.pcb.accum);
+		//	krnTrace("woop2 " + mem_loc);
+			//krnTrace("GOING IN " + this.pcb.accum);
 			
 			mem_loc = mem_loc + _current_pcb.base; //THIS WAS THE PROBLEM.
 			
-			krnTrace("woop454545 " + mem_loc);
+		//	krnTrace("woop454545 " + mem_loc);
 			
 			_mainMem.Memory[mem_loc] = this.pcb.accum;
 
@@ -280,7 +283,7 @@ function cpu() {
 			//this is useless, it's the DO NOTHING opcode
 
 		} else if (instruction == "D0") {
-			krnTrace("WE GOT D0 " + this.pcb.Zflag);
+			//krnTrace("WE GOT D0 " + this.pcb.Zflag);
 			if (this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
 			{
 				var location = _memManagement.getAddress(current_pc + 1); //_memManagement.getAddress(current_pc + 2) +
@@ -301,7 +304,7 @@ function cpu() {
 				}*/
 				
 				
-				krnTrace("after2: " + this.pcb.pc);
+				//krnTrace("after2: " + this.pcb.pc);
 			} else //just inc pc as normal
 			{
 				//krnTrace(this.pcb.pc);

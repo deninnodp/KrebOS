@@ -12,7 +12,7 @@
 // Global CONSTANTS
 //
 var APP_NAME = "KrebOS";  // because I am DJ KREBMEN ....really.
-var APP_VERSION = "0.1";   // Version #
+var APP_VERSION = "3.0";   // Version #
 
 var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
@@ -130,6 +130,8 @@ var _readyqueue = new Array();
 var _scheduler;
 
 var _tickcount = 0;
+
+var rdytorun = false;
 
 
 
