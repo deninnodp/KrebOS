@@ -38,11 +38,11 @@ function mainSetMem(args, base) {
 	for (x in argsArray) {
 		var offset = parseInt(x) + base; //add the base to current location
 		
-		//krnTrace(base);
+		//krnTrace(offset);
 		this.Memory[offset] = argsArray[x];
 	}
 
-	_current_pcb.base_location = base;
+	_current_pcb.base = base;
 
 	this.display();
 

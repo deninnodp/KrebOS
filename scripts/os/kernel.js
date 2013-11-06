@@ -253,7 +253,14 @@ function krnHandleSystemCall() {
 		
 	//	krnTrace("mem_loca: " + mem_loca);
 		var string = "";
-		var char = _memManagement.getAddress(mem_loca);
+		
+		if (_scheduler.executionmode == "FCFS")
+			{
+			var char = _memManagement.getAddress(mem_loca);
+			}else{
+				var char = _memManagement.getAddress2(mem_loca);
+			}
+		
 		var charencoded = parseInt(char, 16);
 		krnTrace("char: " + char);
 	//	krnTrace("charencoded: " + charencoded);
@@ -261,7 +268,12 @@ function krnHandleSystemCall() {
 		//	krnTrace("actualchar " + String.fromCharCode(charencoded));
 			string += String.fromCharCode(charencoded);
 			mem_loca++;
+			if (_scheduler.executionmode == "FCFS")
+			{
 			char = _memManagement.getAddress(mem_loca);
+			}else{
+				char = _memManagement.getAddress2(mem_loca);
+			}
 			charencoded = parseInt(char, 16);
 		//	krnTrace("chare: " + charencoded);
 		}

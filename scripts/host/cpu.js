@@ -30,6 +30,15 @@ function cpu() {
 		this.isExecuting = false;
 
 	}
+	
+/*	this.update = function(PC, Acc, Xreg, Yreg, Zflag)
+	{
+		this.PC = PC;
+		this.Acc = Acc;
+		this.Xreg = Xreg;
+		this.Yreg = Yreg;
+		this.Zflag = Zflag;
+	}*/
 
 	this.pulse = function() {
 		// TODO: Do we need this? Probably not.
@@ -46,6 +55,7 @@ function cpu() {
 		// gets initial info
 		
 		_current_pcb = _readyqueue.shift();
+		
 		
 		this.pcb = _current_pcb;
 
@@ -70,12 +80,44 @@ function cpu() {
 					krnTrace("WASFSDGFG");
 						if (_readyqueue.length != 0)
 							{
+								krnTrace("WASFSDGFG111111");
 								_scheduler.contextSwitch();
 							}else{
+								
+								_StdIn.advanceLine();
+								_StdIn.putText(">");
+								
 								_cpu.isExecuting = false;
 							}
 					}
-			}
+			}else if (_scheduler.executionmode == "RR")
+				{
+				if (this.pcb.state == "TERMINATED")
+				{
+				//krnTrace("WASFSDGFG");
+					if (_readyqueue.length != 0)
+						{
+							_scheduler.contextSwitch();
+						}else{
+							
+							_StdIn.advanceLine();
+							_StdIn.putText(">");
+							
+							_cpu.isExecuting = false;
+						}
+				}else{
+					
+				
+				
+				
+				krnTrace(_tickcount+ " CSSSSSSS " + rrquantum);
+					if (_tickcount >= rrquantum)
+						{
+						//krnTrace(_tickcount+ " CSSSSSSSSSS " + rrquantum);
+							_scheduler.contextSwitch();
+						}
+				}
+				}
 		
 		if (_cpu.isExecuting)
 			{
@@ -94,8 +136,12 @@ function cpu() {
 
 		var current_pc = _memManagement.getPC();
 
+		//this.pcb.pc = current_pc;
+		krnTrace("WINNER: " + current_pc);
+		
 		if (instruction == "00") {
 			//we done, yo
+			krnTrace("WE DONE YO");
 			_current_pcb = this.pcb
 			_current_pcb.state = "TERMINATED";
 			_current_pcb.display();
@@ -119,6 +165,7 @@ function cpu() {
 		//}
 			// need to increment pc- will skip the variable
 			this.pcb.pc++;
+			current_pc++;
 
 			// check for store into mainmem
 		} else if (instruction == "8D") {
@@ -128,13 +175,19 @@ function cpu() {
 
 			// swap the locations - little n-dian
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-		//	krnTrace("woop " + location);
+			krnTrace("woop " + location);
 			var mem_loc = parseInt(location, 16); // get hex value
-		//	krnTrace("woop2 " + mem_loc);
-		//	krnTrace("GOING IN " + this.pcb.accum);
+			krnTrace("woop2 " + mem_loc);
+			krnTrace("GOING IN " + this.pcb.accum);
+			
+			mem_loc = mem_loc + _current_pcb.base; //THIS WAS THE PROBLEM.
+			
+			krnTrace("woop454545 " + mem_loc);
+			
 			_mainMem.Memory[mem_loc] = this.pcb.accum;
 
 			this.pcb.pc += 2;
+			current_pc += 2;
 			// LDA from mem
 		} else if (instruction == "AD") {
 
@@ -145,10 +198,11 @@ function cpu() {
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 
 			var mem_loc = parseInt(location, 16); // get hex value
-
+			mem_loc = mem_loc + _current_pcb.base;
 			this.pcb.accum = _mainMem.Memory[mem_loc];
 
 			this.pcb.pc += 2;
+			current_pc += 2;
 			// check for add with carry (add address with accum)
 		} else if (instruction == "6D") {
 			// get location where need to add from
@@ -157,11 +211,12 @@ function cpu() {
 			// swap the locations - little n-dian
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
-
+			mem_loc = mem_loc + _current_pcb.base;
 			// alert(this.memory[mem_loc] + " " + this.pcb.accum);
 			this.pcb.accum = this.pcb.accum + _mainMem.Memory[mem_loc];
 
 			this.pcb.pc += 2;
+			current_pc += 2;
 
 			// check to load x with constant
 		} else if (instruction == "A2") {
@@ -174,6 +229,7 @@ function cpu() {
 
 			// need to increment pc- will skip the variable
 			this.pcb.pc++;
+			current_pc++;
 
 			// load y reg with constant
 		} else if (instruction == "A0") {
@@ -183,11 +239,12 @@ function cpu() {
 			var strConst = _memManagement.getAddress(current_pc + 1);
 
 			var value = parseInt(strConst, 10);
-			krnTrace("my dad " + strConst);
+			//krnTrace("my dad " + strConst);
 			this.pcb.yreg = strConst; // set accum to value
 
 			// need to increment pc- will skip the variable
 			this.pcb.pc++;
+			current_pc++;
 
 			// load y reg from mem
 		} else if (instruction == "AC") {
@@ -195,9 +252,11 @@ function cpu() {
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
 			//krnTrace("my dad " + mem_loc);
+			mem_loc = mem_loc + _current_pcb.base;
 			this.pcb.yreg = _mainMem.Memory[mem_loc];
 
 			this.pcb.pc += 2;
+			current_pc += 2;
 			//load x reg from mem
 		} else if (instruction == "AE") {
 			// get location where need to add from
@@ -206,10 +265,11 @@ function cpu() {
 			// swap the locations - little n-dian
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
-
+			mem_loc = mem_loc + _current_pcb.base;
 			this.pcb.xreg = _mainMem.Memory[mem_loc];
 
 			this.pcb.pc += 2;
+			current_pc += 2;
 
 		} else if (instruction == "FF") {
 			//System call
@@ -229,32 +289,42 @@ function cpu() {
 				//	krnTrace("memloc " + mem_loc);
 				//	krnTrace("before: " + this.pcb.pc);
 				this.pcb.pc = this.pcb.pc + mem_loc + 1;
+				current_pc = current_pc + mem_loc + 1;
 				//	krnTrace("after: " + this.pcb.pc);
 
 				if (this.pcb.pc > 255) {
 					this.pcb.pc = this.pcb.pc - 256;
 				}
+				
+				/*if (current_pc > _current_pcb.limit) {
+					current_pc = current_pc - 256;
+				}*/
+				
+				
 				krnTrace("after2: " + this.pcb.pc);
 			} else //just inc pc as normal
 			{
 				//krnTrace(this.pcb.pc);
 				this.pcb.pc++;
+				current_pc++;
 			}
 
 		} else if (instruction == "EE") {
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
-
 			var mem_loc = parseInt(location, 16); // get hex value
+			mem_loc = mem_loc + _current_pcb.base;
 			var memByte = _mainMem.Memory[mem_loc];
 			_mainMem.Memory[mem_loc] = ++memByte;
 
 			this.pcb.pc += 2;
+			current_pc +=2;
 
 		} else if (instruction == "EC") {
 			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
 
 			var mem_loc = parseInt(location, 16); // get hex value
 			//krnTrace("memloc " + )
+			mem_loc = mem_loc + _current_pcb.base;
 			var memByte = _mainMem.Memory[mem_loc];
 
 			if (this.pcb.xreg == memByte) {
@@ -263,18 +333,23 @@ function cpu() {
 				this.pcb.Zflag = 0;
 			}
 			this.pcb.pc += 2;
+			current_pc += 2;
 		} else {
 			//krnTrapError("Invalid Machine Code.");
 		}
 
-		// increment PC by 1, get next instruction
-		this.pcb.pc++;
-		var current_location = _memManagement.getPC();
-		instruction = _memManagement.getAddress(current_location);
-
-		_current_pcb = this.pcb;
-		_current_pcb.display();
-		_mainMem.display();
+		if (instruction != "00")
+			{
+			// increment PC by 1, get next instruction
+			this.pcb.pc++;
+			current_pc++;
+			var current_location = _memManagement.getPC();
+			instruction = _memManagement.getAddress(current_location);
+			_tickcount++;
+			_current_pcb = this.pcb;
+			_current_pcb.display();
+			_mainMem.display();
+			}
 
 			}
 	}

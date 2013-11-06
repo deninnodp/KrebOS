@@ -129,6 +129,7 @@ var _readyqueue = new Array();
 
 var _scheduler;
 
+var _tickcount = 0;
 
 
 

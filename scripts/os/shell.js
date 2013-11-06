@@ -157,6 +157,13 @@ function shellInit() {
     sc.function = shellKill;
     this.commandList[this.commandList.length] = sc;
     
+    // swapmode
+    sc = new ShellCommand();
+    sc.command = "swapmode";
+    sc.description = "Swaps the execution mode between FCFS and RR";
+    sc.function = shellSwapMode;
+    this.commandList[this.commandList.length] = sc;
+    
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
 
@@ -605,12 +612,16 @@ function shellRunAll()
 			{
 				_current_pcb = _program_queue[1];
 				_current_pcb.state = "WAITING";
+				_current_pcb.base = "256";
+				_current_pcb.limit = "511";
 				_readyqueue.push(_current_pcb);
 			}
 			if (_program_queue[2] != null)
 			{
 				_current_pcb = _program_queue[2];
 				_current_pcb.state = "WAITING";
+				_current_pcb.base = "512";
+				_current_pcb.limit = "767";
 				_readyqueue.push(_current_pcb);
 			}
 			
@@ -661,6 +672,7 @@ function shellSetQuantum(args)
 	if (isNumber(args) == true)
 		{
 			rrquantum = args;
+			_scheduler.quantum = args;
 			_StdIn.putText("Set quantum to " + args + ".");
 		
 		}else{
@@ -719,6 +731,29 @@ function shellKill(args)
 			_StdIn.advanceLine();
 		}
 }
+
+
+function shellSwapMode(args)
+{
+	if (_cpu.isExecuting == false)
+		{
+			if (_scheduler.executionmode == "FCFS")
+				{
+					_scheduler.executionmode = "RR";
+					_StdIn.putText("Mode set to Round Robin.");
+					_StdIn.advanceLine();
+					
+				}else if (_scheduler.executionmode == "RR"){
+					_scheduler.executionmode = "FCFS";
+					_StdIn.putText("Mode set to FCFS.");
+					_StdIn.advanceLine();
+				}
+		}else{
+			_StdIn.putText("Can't do that while executing!");
+			_StdIn.advanceLine();
+		}
+}
+
 
 
 function isNumber(n) {

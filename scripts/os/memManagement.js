@@ -14,6 +14,7 @@ function memManagement() {
 	this.storeProgram = memManagementStoreProgram;
 	this.getAddress = memManagementGetAddress;
 	this.getPC = memManagementGetPC;
+	this.getAddress2 = memManagementGetAddress2;
 
 }
 
@@ -24,17 +25,40 @@ function memManagementGetAddress(args) {
 	if (_current_pcb.pid == 0)
 		{
 			addressindex = args;
-	//		krnTrace("HOOOO " + addressindex);
+			krnTrace("HOOOOA " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.pid == 1)
 		{
 			addressindex = args;
-//			krnTrace("HOOOO1 " + addressindex);
+			krnTrace("HOOOOA1 " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.pid == 2)
 		{
 			addressindex = args;
-//			krnTrace("HOOOO2 " + addressindex);
+			krnTrace("HOOOOA2 " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}
+
+}
+
+function memManagementGetAddress2(args) {
+
+	var addressindex;
+	
+	if (_current_pcb.pid == 0)
+		{
+			addressindex = args;
+	//		krnTrace("HOOOO " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}else if (_current_pcb.pid == 1)
+		{
+			addressindex = args + 256;
+	//		krnTrace("HOOOO1 " + addressindex);
+			return (_mainMem.Memory[addressindex]);
+		}else if (_current_pcb.pid == 2)
+		{
+			addressindex = args + 512;
+	//		krnTrace("HOOOO2 " + addressindex);
 			return (_mainMem.Memory[addressindex]);
 		}
 
@@ -57,8 +81,9 @@ function memManagementStoreProgram(input, pid) {
 }
 
 function memManagementGetPC() {
-	var output = _current_pcb.base_location + _current_pcb.pc;
+	var output = parseInt(_current_pcb.base) + parseInt(_current_pcb.pc);
 	//krnTrace("THIS THIS THIS THIS " + _current_pcb.pc);
+	krnTrace("BASE: " + _current_pcb.base + "PC: " + _current_pcb.pc);
 	return (output);
 
 }
