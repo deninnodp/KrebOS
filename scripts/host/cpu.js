@@ -350,6 +350,7 @@ function cpu() {
 			instruction = _memManagement.getAddress(current_location);
 			_tickcount++;
 			_current_pcb = this.pcb;
+			//_current_pcb.update(this.state, this.PC, this.Acc, this.Xreg, this.Yreg, this.Zflag, _current_pcb.base, _current_pcb.limit);
 			_current_pcb.display();
 			_mainMem.display();
 			}
