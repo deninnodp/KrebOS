@@ -160,14 +160,66 @@ function shellInit() {
     // swapmode
     sc = new ShellCommand();
     sc.command = "swapmode";
-    sc.description = "Swaps the execution mode between FCFS and RR";
+    sc.description = "Swaps the execution mode between FCFS and RR - deprecated.";
     sc.function = shellSwapMode;
     this.commandList[this.commandList.length] = sc;
     
-    // processes - list the running processes and their IDs
-    // kill <id> - kills the specified process id.
+    // setschedule
+    sc = new ShellCommand();
+    sc.command = "setschedule";
+    sc.description = "<rr, fcfs, priority> - changes the current scheduling algorithm.";
+    sc.function = shellSetSchedule;
+    this.commandList[this.commandList.length] = sc;
+    
+    // create
+    sc = new ShellCommand();
+    sc.command = "create";
+    sc.description = "<filename> - creates a file with the given name.";
+    sc.function = shellCreate;
+    this.commandList[this.commandList.length] = sc;
+    
+    // read
+    sc = new ShellCommand();
+    sc.command = "read";
+    sc.description = "<filename> - Displays the content of the given file.";
+    sc.function = shellRead;
+    this.commandList[this.commandList.length] = sc;
+    
+    // write
+    sc = new ShellCommand();
+    sc.command = "write";
+    sc.description = "<filename> \"data\" - write the data inside the quotes to the given file.";
+    sc.function = shellWrite;
+    this.commandList[this.commandList.length] = sc;
+    
+    // delete
+    sc = new ShellCommand();
+    sc.command = "delete";
+    sc.description = "<filename> - removes the given file from storage.";
+    sc.function = shellDelete;
+    this.commandList[this.commandList.length] = sc;
 
-    //
+    // format
+    sc = new ShellCommand();
+    sc.command = "format";
+    sc.description = "Swaps the execution mode between FCFS and RR";
+    sc.function = shellFormat;
+    this.commandList[this.commandList.length] = sc;
+    
+    //ls
+    sc = new ShellCommand();
+    sc.command = "ls";
+    sc.description = "list files currently on the disk.";
+    sc.function = shellLS;
+    this.commandList[this.commandList.length] = sc;
+    
+    // getschedule
+    sc = new ShellCommand();
+    sc.command = "getschedule";
+    sc.description = "Returns the scheduling algorithm currently in use.";
+    sc.function = shellGetSchedule;
+    this.commandList[this.commandList.length] = sc;
+    
     // Display the initial prompt.
     this.putPrompt();
 }
@@ -758,6 +810,45 @@ function shellSwapMode(args)
 		}
 }
 
+function shellSetSchedule(args)
+{
+	
+}
+
+function shellGetSchedule()
+{
+	
+}
+
+function shellCreate(args)
+{
+	
+}
+
+function shellRead(args)
+{
+	
+}
+
+function shellWrite(args)
+{
+	
+}
+
+function shellDelete(args)
+{
+	
+}
+
+function shellFormat()
+{
+	
+}
+
+function shellLS()
+{
+	
+}
 
 
 function isNumber(n) {
