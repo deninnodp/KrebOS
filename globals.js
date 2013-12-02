@@ -149,6 +149,8 @@ var _scheduler;
 
 var _tickcount = 0;
 
+var daflag = false;
+
 var rdytorun = false;
 
 

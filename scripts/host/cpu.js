@@ -54,6 +54,46 @@ function cpu() {
 	this.exec = function() {
 		// gets initial info
 		
+		if (_scheduler.executionmode == "PRIORITY" && daflag == true)
+			{
+				var bestchoice = 999999999;
+				var finalchoice = 0;
+				var temp = new Array();
+				
+				for(var j=0;j<_readyqueue.length;j++)
+					{
+						if (_readyqueue[j].priority < bestchoice)
+							{
+								bestchoice = _readyqueue[j].priority;
+								finalchoice = j;
+							}
+					}
+				
+				temp[0] = _readyqueue[0];
+				_readyqueue[0] = _readyqueue[j];
+				_readyqueue.push(temp[0]);
+				
+				_current_pcb = _readyqueue.shift();
+				
+				
+				this.pcb = _current_pcb;
+				
+				krnTrace("yogdfg " + this.pcb.pid);
+
+				
+						this.pcb.state = "RUNNING";
+				start_location = _memManagement.getPC();
+
+				// get first instruction
+				instruction = _memManagement.getAddress(start_location);
+				daflag = true;
+				_cpu.isExecuting = true;
+				
+			
+			}else
+				{
+
+		
 		_current_pcb = _readyqueue.shift();
 		
 		
@@ -69,6 +109,8 @@ function cpu() {
 		instruction = _memManagement.getAddress(start_location);
 
 		_cpu.isExecuting = true;
+		
+				}
 
 	}
 
@@ -80,10 +122,10 @@ function cpu() {
 			{
 				if (this.pcb.state == "TERMINATED")
 					{
-					krnTrace("WASFSDGFG");
+					//krnTrace("WASFSDGFG");
 						if (_readyqueue.length != 0)
 							{
-								krnTrace("WASFSDGFG111111");
+								//krnTrace("WASFSDGFG111111");
 								_scheduler.contextSwitch();
 							}else{
 								
@@ -108,7 +150,23 @@ function cpu() {
 							
 							_cpu.isExecuting = false;
 						}
-				}else{
+				}else if (_scheduler.executionmode == "PRIORITY")
+				{
+					krnTrace("WAfsdfsdG");
+					if (this.pcb.state == "TERMINATED")
+					{
+					krnTrace("WASFSDGFG");
+						if (_readyqueue.length != 0)
+							{
+								_scheduler.contextSwitch();
+							}else{
+								
+								_StdIn.advanceLine();
+								_StdIn.putText(">");
+								
+								_cpu.isExecuting = false;
+							}
+					}else{
 					
 				
 				
@@ -126,7 +184,7 @@ function cpu() {
 			{
 		
 		
-		//krnTrace("LOOKY HERE " + instruction);
+		krnTrace("LOOKY HERE " + instruction);
 		
 		//Update the register displays
 		_pcDisplay.innerHTML = _current_pcb.pc;
@@ -356,6 +414,7 @@ function cpu() {
 			}
 
 			}
+	}
 	}
 
 	// returns memory as a string

@@ -111,7 +111,7 @@ function shellInit() {
     // load <pid>
     sc = new ShellCommand();
     sc.command = "load";
-    sc.description = "Loads a user program from the program input textarea into memory.";
+    sc.description = "<priority(default 2)> - Loads a user program from the program input textarea into memory.";
     sc.function = shellLoad;
     this.commandList[this.commandList.length] = sc;
     
@@ -555,70 +555,142 @@ function shellBSOD(args)
 	krnTrapError("User evoked bluescreen command!");
 }
 
-function shellLoad()
+function shellLoad(args)
 {
 
-	// This time around I wrote a much more robust checking program.
-	var input = document.getElementById("taProgramInput").value; // grab
-																	// input
-	krnTrace(input);
-	input2 = input.replace(/\s/g,''); // remove spaces to make the regex
-										// cleaner/simpler
-	krnTrace(input2);
-	// this pattern will verify not only that the values are hex, but that they
-	// are
-	// in the right format: Opcode must be first, and will verify that the
-	// correct
-	// argument size is used after as well.
-
-	//var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
-    
-	//looks like my previous regex was too robust, I forgot that 
-	//you can have data already loaded into a program beforehand.
-	//So, I'll just use a generic Hex-only regex string.
-	
-	var patt =/\b[0-9A-F]+\b/gi;
-    var result = patt.exec(input2);
-    krnTrace(result);
-    
-    // if a valid program cannot be matched, ignore it.
-    if (result != input2)
-    	{
-    		_StdIn.putText("Invalid Program. Please try again.");
-    	//	krnTrace("User entered invalid program, disregarding.");
-    	}else if (result == input2)
-    		{
-	    		_StdIn.putText("Program Valid. Loading...");
+	if (args.length > 0)
+		{
+		
+		if (isNumber(args) == true)
+			{
+			// This time around I wrote a much more robust checking program.
+			var input = document.getElementById("taProgramInput").value; // grab
+																			// input
+			krnTrace(input);
+			input2 = input.replace(/\s/g,''); // remove spaces to make the regex
+												// cleaner/simpler
+			krnTrace(input2);
+			// this pattern will verify not only that the values are hex, but that they
+			// are
+			// in the right format: Opcode must be first, and will verify that the
+			// correct
+			// argument size is used after as well.
+		
+			//var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
+		    
+			//looks like my previous regex was too robust, I forgot that 
+			//you can have data already loaded into a program beforehand.
+			//So, I'll just use a generic Hex-only regex string.
+			
+			var patt =/\b[0-9A-F]+\b/gi;
+		    var result = patt.exec(input2);
+		    krnTrace(result);
+		    
+		    // if a valid program cannot be matched, ignore it.
+		    if (result != input2)
+		    	{
+		    		_StdIn.putText("Invalid Program. Please try again.");
+		    	//	krnTrace("User entered invalid program, disregarding.");
+		    	}else if (result == input2)
+		    		{
+			    		_StdIn.putText("Program Valid. Loading...");
+			    		_StdIn.advanceLine();
+			    		//set PID
+		
+			    		if (pid_next == 3)
+			    			{
+			    				pid_next = 0;
+			    			}
+			    		
+			    		current_pid = pid_next;
+			    		krnTrace("PID" + current_pid);
+			    		//current_pid = args;
+		
+			    		_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
+			    		_current_pcb = _program_queue[current_pid];
+		
+			    		//store that bad boy in memory!
+			    		_memManagement.storeProgram(input, current_pid);
+			    		//update registers on load (basically all 0)
+			    		_current_pcb.priority = args;
+			    		_pcDisplay.innerHTML=_current_pcb.pc;
+			    		_accDisplay.innerHTML=_current_pcb.acc;
+			    		_xDisplay.innerHTML=_current_pcb.x;
+			    		_yDisplay.innerHTML=_current_pcb.y;
+			    		_zDisplay.innerHTML=_current_pcb.z;
+			    		rdytorun = true;
+			    		_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
+		
+			    		//advance next PID
+			    		pid_next = current_pid+1;
+		    		}
+			}else{
+	    		_StdIn.putText("Please enter a number for the priority.");
 	    		_StdIn.advanceLine();
-	    		//set PID
-
-	    		if (pid_next == 3)
-	    			{
-	    				pid_next = 0;
-	    			}
-	    		
-	    		current_pid = pid_next;
-	    		krnTrace("PID" + current_pid);
-	    		//current_pid = args;
-
-	    		_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
-	    		_current_pcb = _program_queue[current_pid];
-
-	    		//store that bad boy in memory!
-	    		_memManagement.storeProgram(input, current_pid);
-	    		//update registers on load (basically all 0)
-	    		_pcDisplay.innerHTML=_current_pcb.pc;
-	    		_accDisplay.innerHTML=_current_pcb.acc;
-	    		_xDisplay.innerHTML=_current_pcb.x;
-	    		_yDisplay.innerHTML=_current_pcb.y;
-	    		_zDisplay.innerHTML=_current_pcb.z;
-	    		rdytorun = true;
-	    		_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
-
-	    		//advance next PID
-	    		pid_next = current_pid+1;
-	    	}
-
+			}
+		}else{
+			
+				var input = document.getElementById("taProgramInput").value; // grab
+				// input
+				krnTrace(input);
+				input2 = input.replace(/\s/g,''); // remove spaces to make the regex
+				// cleaner/simpler
+				krnTrace(input2);
+				// this pattern will verify not only that the values are hex, but that they
+				// are
+				// in the right format: Opcode must be first, and will verify that the
+				// correct
+				// argument size is used after as well.
+				
+				//var patt =/(?:A9..|AD....|8D....|6D....|A2..|AE....|A0..|AC....|EA|00|EC....|D0..|EE....|FF)+/;
+				
+				//looks like my previous regex was too robust, I forgot that 
+				//you can have data already loaded into a program beforehand.
+				//So, I'll just use a generic Hex-only regex string.
+				
+				var patt =/\b[0-9A-F]+\b/gi;
+				var result = patt.exec(input2);
+				krnTrace(result);
+				
+				// if a valid program cannot be matched, ignore it.
+				if (result != input2)
+				{
+				_StdIn.putText("Invalid Program. Please try again.");
+				//	krnTrace("User entered invalid program, disregarding.");
+				}else if (result == input2)
+				{
+				_StdIn.putText("Program Valid. Loading...");
+				_StdIn.advanceLine();
+				//set PID
+				
+				if (pid_next == 3)
+				{
+				pid_next = 0;
+				}
+				
+				current_pid = pid_next;
+				krnTrace("PID" + current_pid);
+				//current_pid = args;
+				
+				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
+				_current_pcb = _program_queue[current_pid];
+				
+				//store that bad boy in memory!
+				_memManagement.storeProgram(input, current_pid);
+				//update registers on load (basically all 0)
+				_current_pcb.priority = 2;
+				_pcDisplay.innerHTML=_current_pcb.pc;
+				_accDisplay.innerHTML=_current_pcb.acc;
+				_xDisplay.innerHTML=_current_pcb.x;
+				_yDisplay.innerHTML=_current_pcb.y;
+				_zDisplay.innerHTML=_current_pcb.z;
+				rdytorun = true;
+				_StdOut.putText("Program loaded. Type 'run " + current_pid + "' to execute");
+				
+				//advance next PID
+				pid_next = current_pid+1;
+				}
+	}
 }
 
 function shellRun(args)
@@ -788,7 +860,7 @@ function shellKill(args)
 		}
 }
 
-
+//now deprecated, keeping anyway
 function shellSwapMode(args)
 {
 	if (_cpu.isExecuting == false)
@@ -812,12 +884,43 @@ function shellSwapMode(args)
 
 function shellSetSchedule(args)
 {
+	if (args == "rr")
+		{
+			_scheduler.executionmode = "RR";
+			_StdIn.putText("Mode set to Round Robin.");
+			_StdIn.advanceLine();
+		}else if (args == "fcfs")
+			{
+				_scheduler.executionmode = "FCFS";
+				_StdIn.putText("Mode set to FCFS.");
+				_StdIn.advanceLine();
+			}else if (args == "priority")
+				{
+					_scheduler.executionmode = "PRIORITY";
+					_StdIn.putText("Mode set to Priority.");
+					_StdIn.advanceLine();
+				}else{
+					_StdIn.putText("Please enter a valid algorithm name. (Reference help)");
+					_StdIn.advanceLine();
+				}
 	
 }
 
 function shellGetSchedule()
 {
-	
+	if (_scheduler.executionmode == "RR")
+	{
+		_StdIn.putText("Current mode is Round Robin.");
+		_StdIn.advanceLine();
+	}else if (_scheduler.executionmode == "FCFS")
+		{
+			_StdIn.putText("Current mode is FCFS.");
+			_StdIn.advanceLine();
+		}else if (_scheduler.executionmode == "PRIORITY")
+			{
+				_StdIn.putText("Current mode is Priority.");
+				_StdIn.advanceLine();
+			}
 }
 
 function shellCreate(args)

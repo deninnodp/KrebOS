@@ -25,19 +25,19 @@ function scheduler()
 						if (_current_pcb.state != "TERMINATED")
 							{
 								//krnTrace("inside");
-								_current_pcb.status = "WAITING";
+								_current_pcb.status = "READY";
 								//krnTrace(_current_pcb.status + " g " + _current_pcb.pid);
 							   	if (_current_pcb.pid == "0")
 					    		{	
-						        	_stateDisplay0.innerHTML = "WAITING";
+						        	_stateDisplay0.innerHTML = "READY";
 						        	_baseDisplay0.innerHTML = _current_pcb.base;
 						        	_limitDisplay0.innerHTML = _current_pcb.limit;
 					    		}else if (_current_pcb.pid == "1"){
-						        	_stateDisplay1.innerHTML = "WAITING";
+						        	_stateDisplay1.innerHTML = "READY";
 						        	_baseDisplay1.innerHTML = _current_pcb.base;
 						        	_limitDisplay1.innerHTML = _current_pcb.limit;
 					    		}else if (_current_pcb.pid == "2"){
-						        	_stateDisplay2.innerHTML = "WAITING";
+						        	_stateDisplay2.innerHTML = "READY";
 						        	_baseDisplay2.innerHTML = _current_pcb.base;
 						        	_limitDisplay2.innerHTML = _current_pcb.limit;
 					    		}
@@ -57,6 +57,22 @@ function scheduler()
 		//				{
 						//	_mode = 0;
 		//				}
+			}
+		
+	}
+	
+	
+	this.priorityContextSwitch = function()
+	{
+		//krnTrace("CONTEXT SWITCH");
+		//make sure something is on the ready queue
+		if (_readyqueue.length != 0)
+			{
+				_Mode = 0;
+				_current_pcb.display();
+				_tickcount = 0;
+				_cpu.exec();
+				_Mode = 1;
 			}
 		
 	}
