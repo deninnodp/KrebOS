@@ -925,7 +925,21 @@ function shellGetSchedule()
 
 function shellCreate(args)
 {
+	var file = args[0];
 	
+	if (file != "" && file != null)
+		{
+			var success = krnFSCreate(file);
+			
+			if (success == true)
+				{
+				_StdIn.putText("Created a file named " + file);
+				_StdIn.advanceLine();
+				}else{
+					_StdIn.putText("File creation failed.");
+					_StdIn.advanceLine();
+				}
+		}
 }
 
 function shellRead(args)

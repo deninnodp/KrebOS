@@ -33,6 +33,7 @@ function DeviceDriverFileSystem()
     this.createDisplay = krnFSCreateDisplay;
     this.updateDisplay = krnFSUpdateDisplay;
     this.getBlock = krnFSGetNextEmptyBlock;
+    this.getDirectoryBlock = krnFSGetNextEmptyDirectoryBlock;
     	
 }
 
@@ -107,7 +108,8 @@ function krnFSFormat(args)
 					value = [e, track2, sector2, block2, data];
 				
 					localStorage[key] = value;
-					//krnTrace("LOOK: " + localStorage[key]);
+					
+					//krnTrace("LOOK: " + key);
 					
 				}
 			
@@ -160,20 +162,23 @@ function krnFSFormat(args)
 
 function krnFSCreate(file)
 {
-	var nextblock = krnFSGetNextEmptyBlock();
+	var nextblock = null;
+	var dir = null;
+	nextblock = krnFSGetNextEmptyBlock();
+	dir = krnFSGetNextEmptyDirectoryBlock();
 	var data;
 	var decodedkey;
-	
+	var decodedkey2;
 	//decode the key so we can use it
-	decodedkey = nextblock.replace(/\]|\[|,/g, "");
-	decodedkey = parseInt(decodedkey);
+	decodedkey2 = nextblock.replace(/\]|\[|,/g, "");
+	decodedkey = parseInt(decodedkey2);
 	
-	var currentt = decodedkey[0];
-	var currents = decodedkey[1];
-	var currentb = decodedkey[2];
+	var currentt = decodedkey2[0];
+	var currents = decodedkey2[1];
+	var currentb = decodedkey2[2];
 
 	
-	if (nextblock != null && file.length < 60)
+	if (nextblock != null && dir != null && file.length <= 60)
 		{
 			//data = localStorage[nextblock];
 			//krnTrace("DATA1: " + data);
@@ -184,20 +189,45 @@ function krnFSCreate(file)
 			var track = currentt;
 			var sector = currents;
 			var block = currentb;
-			//60 ` for now? might need to change this.
-			var data = "````````````````````````````````````````````````````````````";
-			
+
+			var data = "------------------------------------------------------------";
+			var data2 = file;
 			//turn the values into strings
 			var e = exists.toString();
 			var track2 = track.toString();
 			var sector2 = sector.toString();
 			var block2 = block.toString();
 			
+			krnTrace("DIR: " + dir + " FILE: " + nextblock);
 			value = [e, track2, sector2, block2, data];
+			dirvalue = [e, track2, sector2, block2, data2];
 		
-			localStorage[key] = value;
+			localStorage[nextblock] = value;
+			localStorage[dir] = dirvalue;
 			
+			krnFSCreateDisplay();
+			return true;
+		}else{
+			_StdIn.putText("Error while creating file.");
+			_StdIn.advanceLine();
 			
+			if (nextblock == null)
+				{
+				_StdIn.putText("No file blocks available.");
+				_StdIn.advanceLine();
+				}
+			
+			if (dir == null)
+				{
+				_StdIn.putText("No directory blocks available.");
+				_StdIn.advanceLine();
+				}
+			if (file.length > 60)
+				{
+				_StdIn.putText("Filename is too long. Max 60 characters.");
+				_StdIn.advanceLine();
+				}
+			return false;
 		}
 	
 }
@@ -229,13 +259,50 @@ function krnFSGetNextEmptyBlock()
 	
 	for(key in localStorage)
 		{			
-			helddata = localStorage[key];
-			exists = helddata[0];
+		
+			//decode the key so we can use it
+			decodedkey = key.replace(/\]|\[|,/g, "");
+			decodedkey = parseInt(decodedkey);
+			//make sure this is a file
+			//krnTrace("KEY: " + key);
+			if (decodedkey <= 400 && decodedkey >= 100)
+			{
+				//krnTrace("IM INNNNNNNNNNNNN");
+				helddata = localStorage[key];
+				exists = helddata[0];
+				
+				if (exists == 0)
+					{
+						return(key);
+					}
+			}
 			
-			if (exists == 0)
-				{
-					return(key);
-				}
+		}
+	//didnt find an empty block so....return nothing
+	return null;
+}
+
+function krnFSGetNextEmptyDirectoryBlock()
+{
+	var helddata;
+	var exists;
+	
+	for(key in localStorage)
+		{	
+			//decode the key so we can use it
+			decodedkey = key.replace(/\]|\[|,/g, "");
+			decodedkey = parseInt(decodedkey);
+			//make sure this is a directory
+			if (decodedkey <= 77 && decodedkey >= 0)
+			{
+				helddata = localStorage[key];
+				exists = helddata[0];
+				
+				if (exists == 0)
+					{
+						return(key);
+					}
+			}
 			
 		}
 	//didnt find an empty block so....return nothing
@@ -258,14 +325,13 @@ function krnFSCreateDisplay()
 
 	//krnTrace("LEN: " + localStorage.length);
 	
-	var trackcount2 = trackcount.toString();
-	var sectorcount2 = sectorcount.toString();
-	var blockcount2 = blockcount.toString();
-	
 
-	
-	while (i <= localStorage.length)
+	while (i <= localStorage.length-2)
 		{
+			var trackcount2 = trackcount.toString();
+			var sectorcount2 = sectorcount.toString();
+			var blockcount2 = blockcount.toString();
+		
 			keycount = [trackcount2, sectorcount2, blockcount2];
 			
 			var datdata = localStorage[keycount];
