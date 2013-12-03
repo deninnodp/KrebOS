@@ -945,6 +945,16 @@ function shellDelete(args)
 
 function shellFormat()
 {
+	var formatstatus = krnFileSystemDriver.format();
+	
+	if (formatstatus)
+		{
+			_StdIn.putText("Format Successful.");
+			_StdIn.advanceLine();
+		}else{
+    		_StdIn.putText("Format was not successful.");
+    		_StdIn.advanceLine();
+		}
 	
 }
 
