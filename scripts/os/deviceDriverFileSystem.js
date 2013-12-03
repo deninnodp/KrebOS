@@ -232,9 +232,55 @@ function krnFSCreate(file)
 	
 }
 
-function krnFSRead()
+function krnFSRead(args)
 {
-	
+	try
+	{
+		var decodedkey;
+		var data;
+		var data2;
+		var filekey;
+		var finaldata;
+		
+		for (key in localStorage)
+			{
+				//krnTrace("KETETE: " + key);
+				//decode key so we can use it
+				decodedkey = key.replace(/\]|\[|,/g, "");
+				decodedkey = parseInt(decodedkey);
+				
+				//only care about directory data
+				if (decodedkey <= 77 && decodedkey >= 0)
+				{
+					data = localStorage[key];
+					var datasize = data.length;
+					data2 = data.substring(8,datasize);
+					
+					//krnTrace("DATA2: " + data2);
+					//krnTrace("ARGS: " + args);
+					if (data2 == args)
+						{
+						filekey = data.substring(2,7);
+						//filekey = "[" + filekey;
+						//filekey = filekey + "]";
+						//krnTrace("FILEKEY: " + filekey);
+						
+						finaldata = localStorage[filekey];
+						datasize = finaldata.length;
+						finaldata = finaldata.substring(8,datasize);
+						
+						return finaldata;
+						}
+				
+					
+				}
+			}
+	}
+	catch(e)
+	{
+		return null;
+	}
+
 }
 
 function krnFSWrite()

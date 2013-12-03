@@ -929,7 +929,7 @@ function shellCreate(args)
 	
 	if (file != "" && file != null)
 		{
-			var success = krnFSCreate(file);
+			var success = krnFileSystemDriver.create(file);
 			
 			if (success == true)
 				{
@@ -939,12 +939,29 @@ function shellCreate(args)
 					_StdIn.putText("File creation failed.");
 					_StdIn.advanceLine();
 				}
+		}else{
+			_StdIn.putText("Please enter a valid filename.");
+			_StdIn.advanceLine();
 		}
 }
 
 function shellRead(args)
 {
+	var file = args.join(" ");
 	
+	if ( file != "" && file != null)
+		{
+			var contents = krnFileSystemDriver.read(file);
+			
+			if (contents != null)
+				{
+				_StdIn.putText(contents);
+				_StdIn.advanceLine();
+				}
+		}else{
+			_StdIn.putText("Please enter a valid filename.");
+			_StdIn.advanceLine();
+			}
 }
 
 function shellWrite(args)
