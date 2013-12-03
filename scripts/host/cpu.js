@@ -54,11 +54,14 @@ function cpu() {
 	this.exec = function() {
 		// gets initial info
 		
-		if (_scheduler.executionmode == "PRIORITY" && daflag == true)
+		if (_scheduler.executionmode == "PRIORITY")
 			{
+				krnTrace("sup");
+				//krnTrace(_readyqueue.length);
 				var bestchoice = 999999999;
 				var finalchoice = 0;
 				var temp = new Array();
+				var len = _readyqueue.length;
 				
 				for(var j=0;j<_readyqueue.length;j++)
 					{
@@ -66,15 +69,31 @@ function cpu() {
 							{
 								bestchoice = _readyqueue[j].priority;
 								finalchoice = j;
+								//krnTrace("BEST " + bestchoice);
+								//krnTrace("FINAL " + finalchoice);
 							}
 					}
 				
-				temp[0] = _readyqueue[0];
-				_readyqueue[0] = _readyqueue[j];
-				_readyqueue.push(temp[0]);
+				if (_readyqueue[finalchoice] != _readyqueue[0])
+					{
+				
+						temp = _readyqueue[0];
+					
+						
+						//krnTrace("temp = " + temp[0].pid);
+						
+				    	_readyqueue[0] = _readyqueue[finalchoice];
+						_readyqueue.push(temp);
+		
+						//krnTrace("0 = " + _readyqueue[0].pid);
+						//krnTrace("1 = " + _readyqueue[1].pid);
+						//krnTrace("2 = " + _readyqueue[2].pid);
+				
+					}
 				
 				_current_pcb = _readyqueue.shift();
 				
+				krnTrace("yogsssssssdfg " + _current_pcb.pid);
 				
 				this.pcb = _current_pcb;
 				
@@ -135,7 +154,24 @@ function cpu() {
 								_cpu.isExecuting = false;
 							}
 					}
-			}else if (_scheduler.executionmode == "RR")
+			}else if (_scheduler.executionmode == "PRIORITY")
+			{
+				//krnTrace("WAfsdfsdG");
+				if (this.pcb.state == "TERMINATED")
+				{
+				//krnTrace("WASFSDGFG");
+					if (_readyqueue.length != 0)
+						{
+							_scheduler.contextSwitch();
+						}else{
+							
+							_StdIn.advanceLine();
+							_StdIn.putText(">");
+							
+							_cpu.isExecuting = false;
+						}
+				}
+				}else if (_scheduler.executionmode == "RR")
 				{
 				if (this.pcb.state == "TERMINATED")
 				{
@@ -150,23 +186,7 @@ function cpu() {
 							
 							_cpu.isExecuting = false;
 						}
-				}else if (_scheduler.executionmode == "PRIORITY")
-				{
-					krnTrace("WAfsdfsdG");
-					if (this.pcb.state == "TERMINATED")
-					{
-					krnTrace("WASFSDGFG");
-						if (_readyqueue.length != 0)
-							{
-								_scheduler.contextSwitch();
-							}else{
-								
-								_StdIn.advanceLine();
-								_StdIn.putText(">");
-								
-								_cpu.isExecuting = false;
-							}
-					}else{
+				}else{
 					
 				
 				
@@ -184,7 +204,7 @@ function cpu() {
 			{
 		
 		
-		krnTrace("LOOKY HERE " + instruction);
+		//krnTrace("LOOKY HERE " + instruction);
 		
 		//Update the register displays
 		_pcDisplay.innerHTML = _current_pcb.pc;
@@ -430,4 +450,3 @@ function cpu() {
 		return (output);
 	}
 
-}
