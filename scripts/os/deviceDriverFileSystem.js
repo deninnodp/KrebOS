@@ -32,6 +32,7 @@ function DeviceDriverFileSystem()
     this.ls = krnFSLS;
     this.createDisplay = krnFSCreateDisplay;
     this.updateDisplay = krnFSUpdateDisplay;
+    this.getBlock = krnFSGetNextEmptyBlock;
     	
 }
 
@@ -145,7 +146,8 @@ function krnFSFormat(args)
 			//this.createDisplay;
 			krnFSCreateDisplay();
 			}else{
-				this.updateDisplay;
+				//leaving this as create for now, may not need update.
+				krnFSCreateDisplay();
 			}
 		
 		return true;
@@ -156,8 +158,47 @@ function krnFSFormat(args)
 	}
 }
 
-function krnFSCreate()
+function krnFSCreate(file)
 {
+	var nextblock = krnFSGetNextEmptyBlock();
+	var data;
+	var decodedkey;
+	
+	//decode the key so we can use it
+	decodedkey = nextblock.replace(/\]|\[|,/g, "");
+	decodedkey = parseInt(decodedkey);
+	
+	var currentt = decodedkey[0];
+	var currents = decodedkey[1];
+	var currentb = decodedkey[2];
+
+	
+	if (nextblock != null && file.length < 60)
+		{
+			//data = localStorage[nextblock];
+			//krnTrace("DATA1: " + data);
+			//data[0] = "1";
+			//krnTrace("DATA2: " + data);
+			//localStorage[nextblock] = data;
+			var exists = 1;
+			var track = currentt;
+			var sector = currents;
+			var block = currentb;
+			//60 ` for now? might need to change this.
+			var data = "````````````````````````````````````````````````````````````";
+			
+			//turn the values into strings
+			var e = exists.toString();
+			var track2 = track.toString();
+			var sector2 = sector.toString();
+			var block2 = block.toString();
+			
+			value = [e, track2, sector2, block2, data];
+		
+			localStorage[key] = value;
+			
+			
+		}
 	
 }
 
@@ -181,6 +222,26 @@ function krnFSLS()
 	
 }
 
+function krnFSGetNextEmptyBlock()
+{
+	var helddata;
+	var exists;
+	
+	for(key in localStorage)
+		{			
+			helddata = localStorage[key];
+			exists = helddata[0];
+			
+			if (exists == 0)
+				{
+					return(key);
+				}
+			
+		}
+	//didnt find an empty block so....return nothing
+	return null;
+}
+
 function krnFSCreateDisplay()
 {
 	
@@ -195,7 +256,7 @@ function krnFSCreateDisplay()
 	var blockcount = 0;
 	var line;
 
-	krnTrace("LEN: " + localStorage.length);
+	//krnTrace("LEN: " + localStorage.length);
 	
 	var trackcount2 = trackcount.toString();
 	var sectorcount2 = sectorcount.toString();
@@ -208,7 +269,7 @@ function krnFSCreateDisplay()
 			keycount = [trackcount2, sectorcount2, blockcount2];
 			
 			var datdata = localStorage[keycount];
-			datdata = datdata.replace(/(\r\n|\n|\r)/gm,"");
+			//datdata = datdata.replace(/(\r\n|\n|\r)/gm,"");
 			//console.log(datdata);
 			
 			line = "[" + trackcount + ",     " + sectorcount + ",     " + blockcount + "]  :  " + datdata;
