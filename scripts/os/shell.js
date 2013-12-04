@@ -966,6 +966,36 @@ function shellRead(args)
 
 function shellWrite(args)
 {
+	var file = args[0];
+	var towrite = "";
+	//krnTrace("NAME: " + file);
+	
+	for(var i=1;i<args.length;i++)
+		{
+		towrite = towrite + (" " + args[i]);
+		//krnTrace("TOWRITE: " + towrite);
+		
+		}
+
+	
+	if ( file != "" && file != null)
+		{
+			//var contents = krnFileSystemDriver.read(file);
+			
+			var success = krnFileSystemDriver.write(file,towrite);
+		
+			if (success)
+				{
+				_StdIn.putText("File Written.");
+				_StdIn.advanceLine();
+				}else{
+					_StdIn.putText("Error writing file.");
+					_StdIn.advanceLine();
+				}
+		}else{
+			_StdIn.putText("Please enter a valid filename.");
+			_StdIn.advanceLine();
+			}
 	
 }
 

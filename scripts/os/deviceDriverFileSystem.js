@@ -31,7 +31,6 @@ function DeviceDriverFileSystem()
     this.del = krnFSDelete; //javascript doesn't like me using reserved words :c
     this.ls = krnFSLS;
     this.createDisplay = krnFSCreateDisplay;
-    this.updateDisplay = krnFSUpdateDisplay;
     this.getBlock = krnFSGetNextEmptyBlock;
     this.getDirectoryBlock = krnFSGetNextEmptyDirectoryBlock;
     	
@@ -283,8 +282,108 @@ function krnFSRead(args)
 
 }
 
-function krnFSWrite()
+function krnFSWrite(filearg,dataarg)
 {
+	//reusing code from read for this
+	try
+	{
+		var decodedkey;
+		var decodedkey2;
+		var data;
+		var data2;
+		var filekey;
+		var finaldata;
+		var keyz;
+		
+		for (key in localStorage)
+			{
+				//krnTrace("KETETE: " + key);
+				//decode key so we can use it
+				decodedkey2 = key.replace(/\]|\[|,/g, "");
+				decodedkey = parseInt(decodedkey2);
+				krnTrace("KETETE: " + decodedkey2);
+				//only care about directory data
+				if (decodedkey <= 77 && decodedkey >= 0)
+				{
+					data = localStorage[key];
+					var datasize = data.length;
+					data2 = data.substring(8,datasize);
+					
+					krnTrace("DATA2: " + data2);
+					krnTrace("ARGS: " + filearg);
+					if (data2 == filearg)
+						{
+						filekey = data.substring(2,7);
+						//krnTrace("FILEKEY: " + filekey);
+						decodedkey2 = filekey.replace(/\]|\[|,/g, "");
+						decodedkey = parseInt(decodedkey2);
+						//filekey = "[" + filekey;
+						//filekey = filekey + "]";
+						//krnTrace("FILEKEY: " + filekey);
+						krnTrace("FILEKEYsd: " + decodedkey2);
+						//finaldata = localStorage[filekey];
+						//datasize = finaldata.length;
+						//finaldata = finaldata.substring(8,datasize);
+						
+						//prepare the new value to be written
+
+						//decodedkey2 = nextblock.replace(/\]|\[|,/g, "");
+						//decodedkey = parseInt(decodedkey2);
+						//decodedkey2 = decodedkey.toString();
+						var t = decodedkey2[0];
+						var s = decodedkey2[1];
+						var b = decodedkey2[2];
+						
+						krnTrace("T: " + t);
+						krnTrace("S: " + s);
+						krnTrace("B: " + b);
+						
+						var t2 = t.toString();
+						var s2 = s.toString();
+						var b2 = b.toString();
+						
+						//key = [t2, s2, b2];
+					//	krnTrace("HELLO");
+						//create the data for values
+						var exists = 1;
+						var track2 = t2;
+						var sector2 = s2;
+						var block2 = b2;
+						//60 ` for now? might need to change this.
+						var data = dataarg;
+						
+						keyz = [t2, s2, b2];
+						
+						//turn the values into strings
+						var e = exists.toString();
+						
+						value = [e, track2, sector2, block2, data];
+					
+						krnTrace("VALU: " + value);
+						
+						localStorage[keyz] = value;
+						
+						krnFSCreateDisplay();
+						
+						return true;
+						}
+						
+					
+						
+				
+					
+				}
+			}
+		
+		_StdIn.putText("Could not find file with specified name.");
+		_StdIn.advanceLine();
+	}
+	
+	
+	catch(e)
+	{
+		return false;
+	}
 	
 }
 
@@ -406,10 +505,5 @@ function krnFSCreateDisplay()
 	
 }
 
-function krnFSUpdateDisplay()
-{
-
-	
-}
 
 
