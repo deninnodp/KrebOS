@@ -301,7 +301,7 @@ function krnFSWrite(filearg,dataarg)
 				//decode key so we can use it
 				decodedkey2 = key.replace(/\]|\[|,/g, "");
 				decodedkey = parseInt(decodedkey2);
-				krnTrace("KETETE: " + decodedkey2);
+			//	krnTrace("KETETE: " + decodedkey2);
 				//only care about directory data
 				if (decodedkey <= 77 && decodedkey >= 0)
 				{
@@ -309,8 +309,8 @@ function krnFSWrite(filearg,dataarg)
 					var datasize = data.length;
 					data2 = data.substring(8,datasize);
 					
-					krnTrace("DATA2: " + data2);
-					krnTrace("ARGS: " + filearg);
+				//	krnTrace("DATA2: " + data2);
+				//	krnTrace("ARGS: " + filearg);
 					if (data2 == filearg)
 						{
 						filekey = data.substring(2,7);
@@ -320,7 +320,7 @@ function krnFSWrite(filearg,dataarg)
 						//filekey = "[" + filekey;
 						//filekey = filekey + "]";
 						//krnTrace("FILEKEY: " + filekey);
-						krnTrace("FILEKEYsd: " + decodedkey2);
+						//krnTrace("FILEKEYsd: " + decodedkey2);
 						//finaldata = localStorage[filekey];
 						//datasize = finaldata.length;
 						//finaldata = finaldata.substring(8,datasize);
@@ -359,7 +359,7 @@ function krnFSWrite(filearg,dataarg)
 						
 						value = [e, track2, sector2, block2, data];
 					
-						krnTrace("VALU: " + value);
+					//	krnTrace("VALU: " + value);
 						
 						localStorage[keyz] = value;
 						
@@ -367,11 +367,7 @@ function krnFSWrite(filearg,dataarg)
 						
 						return true;
 						}
-						
-					
-						
-				
-					
+										
 				}
 			}
 		
@@ -387,8 +383,91 @@ function krnFSWrite(filearg,dataarg)
 	
 }
 
-function krnFSDelete()
+function krnFSDelete(args)
 {
+	//borrow the code from read again
+	try
+	{
+		var decodedkey;
+		var data;
+		var data2;
+		var filekey;
+		var finaldata;
+		
+		for (key in localStorage)
+			{
+				//krnTrace("KETETE: " + key);
+				//decode key so we can use it
+				decodedkey = key.replace(/\]|\[|,/g, "");
+				decodedkey = parseInt(decodedkey);
+				
+				//only care about directory data
+				if (decodedkey <= 77 && decodedkey >= 0)
+				{
+					data = localStorage[key];
+					var datasize = data.length;
+					data2 = data.substring(8,datasize);
+					
+					krnTrace("DATA2: " + data2);
+					krnTrace("ARGS: " + args);
+					if (data2 == args)
+						{
+						
+						filekey = data.substring(2,7);
+
+						decodedkey2 = filekey.replace(/\]|\[|,/g, "");
+						decodedkey = parseInt(decodedkey2);
+						
+						var t = decodedkey2[0];
+						var s = decodedkey2[1];
+						var b = decodedkey2[2];
+						
+						//krnTrace("T: " + t);
+						//krnTrace("S: " + s);
+						//krnTrace("B: " + b);
+						
+						var t2 = t.toString();
+						var s2 = s.toString();
+						var b2 = b.toString();
+						
+						//key = [t2, s2, b2];
+						//krnTrace("HELLO");
+						//create the data for values
+						var exists = 0;
+						var track2 = -1;
+						var sector2 = -1;
+						var block2 = -1;
+						//60 ` for now? might need to change this.
+						var data = "````````````````````````````````````````````````````````````";
+						
+						keyz = [t2, s2, b2];
+						
+						//turn the values into strings
+						var e = exists.toString();
+						
+						value = [e, track2, sector2, block2, data];
+					
+						krnTrace("VALU: " + value);
+						
+						localStorage[keyz] = value;
+						localStorage[key] = value;
+						
+						krnFSCreateDisplay();
+						
+						return true;
+						}
+				
+					
+				}
+			}
+		
+		_StdIn.putText("Could not find file with specified name.");
+		_StdIn.advanceLine();
+	}
+	catch(e)
+	{
+		return false;
+	}
 	
 }
 

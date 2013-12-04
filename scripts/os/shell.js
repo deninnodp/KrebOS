@@ -1001,6 +1001,24 @@ function shellWrite(args)
 
 function shellDelete(args)
 {
+	var file = args[0];
+	if ( file != "" && file != null)
+	{
+		var success = krnFileSystemDriver.del(file);
+		
+		if (success)
+		{
+			_StdIn.putText("File Deleted.");
+			_StdIn.advanceLine();
+		}else{
+			_StdIn.putText("Error deleting file.");
+			_StdIn.advanceLine();
+		}
+		
+	}else{
+		_StdIn.putText("Please enter a valid filename.");
+		_StdIn.advanceLine();
+		}
 	
 }
 
