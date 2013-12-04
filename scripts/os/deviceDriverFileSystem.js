@@ -55,15 +55,14 @@ function krnFSDriverEntry()
     		krnTrace("File System loaded successfully!")
 		}
 	
-	
-	//not really sure what else to add here...
 }
 
 function krnFSFormat(args)
 {
+	//format, also "creates" the filesystem when none exists.
 	try
 	{
-		
+		//wipe the local storage
 		localStorage.clear();
 		
 		var key;
@@ -71,6 +70,7 @@ function krnFSFormat(args)
 		var t = 0;
 		var s = 0;
 		var b = 0;
+		
 		//init tracks
 		for(t=0;t<4;t++)
 		{
@@ -82,12 +82,14 @@ function krnFSFormat(args)
 				//init blocks in each sector
 				for(b=0;b<8;b++)
 				{
+					
 					//krnTrace("BLOCK");
 					//make the tsb values into strings
 					t2 = t.toString();
 					s2 = s.toString();
 					b2 = b.toString();
 					
+					//create the key
 					key = [t2, s2, b2];
 					
 					//create the data for values
@@ -116,6 +118,7 @@ function krnFSFormat(args)
 			}
 			
 		}
+		
 		//create the data for mbr values
 		var mbr1 = 0;
 		var mbr2 = 0;
@@ -140,16 +143,9 @@ function krnFSFormat(args)
 		var mbrblock2 = mbrblock.toString();
 
 		localStorage[mbr] = [mbre, mbrtrack2, mbrsector2, mbrblock2, data];
+		
+		krnFSCreateDisplay();
 
-		if (args.length > 0)
-			{
-			//krnTrace("GOING");
-			//this.createDisplay;
-			krnFSCreateDisplay();
-			}else{
-				//leaving this as create for now, may not need update.
-				krnFSCreateDisplay();
-			}
 		
 		return true;
 	}
@@ -161,10 +157,12 @@ function krnFSFormat(args)
 
 function krnFSCreate(file)
 {
+	//get the next empty dir and file blocks
 	var nextblock = null;
 	var dir = null;
 	nextblock = krnFSGetNextEmptyBlock();
 	dir = krnFSGetNextEmptyDirectoryBlock();
+	
 	var data;
 	var decodedkey;
 	var decodedkey2;
@@ -176,14 +174,10 @@ function krnFSCreate(file)
 	var currents = decodedkey2[1];
 	var currentb = decodedkey2[2];
 
-	
+	//make sure that we found both blocks and the file name isnt too long
 	if (nextblock != null && dir != null && file.length <= 60)
 		{
-			//data = localStorage[nextblock];
-			//krnTrace("DATA1: " + data);
-			//data[0] = "1";
-			//krnTrace("DATA2: " + data);
-			//localStorage[nextblock] = data;
+			//set the "uninitialized" values that will be stored
 			var exists = 1;
 			var track = currentt;
 			var sector = currents;
@@ -197,16 +191,19 @@ function krnFSCreate(file)
 			var sector2 = sector.toString();
 			var block2 = block.toString();
 			
-			krnTrace("DIR: " + dir + " FILE: " + nextblock);
+			//krnTrace("DIR: " + dir + " FILE: " + nextblock);
 			value = [e, track2, sector2, block2, data];
 			dirvalue = [e, track2, sector2, block2, data2];
-		
+			
+			//set the data
 			localStorage[nextblock] = value;
 			localStorage[dir] = dirvalue;
 			
 			krnFSCreateDisplay();
 			return true;
 		}else{
+			//something bad happened...
+			
 			_StdIn.putText("Error while creating file.");
 			_StdIn.advanceLine();
 			
@@ -251,19 +248,17 @@ function krnFSRead(args)
 				//only care about directory data
 				if (decodedkey <= 77 && decodedkey >= 0)
 				{
+					//get the data portion
 					data = localStorage[key];
 					var datasize = data.length;
 					data2 = data.substring(8,datasize);
 					
-					//krnTrace("DATA2: " + data2);
-					//krnTrace("ARGS: " + args);
+					//check to make sure the file exists
 					if (data2 == args)
 						{
 						filekey = data.substring(2,7);
-						//filekey = "[" + filekey;
-						//filekey = filekey + "]";
-						//krnTrace("FILEKEY: " + filekey);
 						
+						//read and return the data
 						finaldata = localStorage[filekey];
 						datasize = finaldata.length;
 						finaldata = finaldata.substring(8,datasize);
@@ -287,6 +282,7 @@ function krnFSWrite(filearg,dataarg)
 	//reusing code from read for this
 	try
 	{
+		//declare vars
 		var decodedkey;
 		var decodedkey2;
 		var data;
@@ -297,39 +293,28 @@ function krnFSWrite(filearg,dataarg)
 		
 		for (key in localStorage)
 			{
-				//krnTrace("KETETE: " + key);
 				//decode key so we can use it
 				decodedkey2 = key.replace(/\]|\[|,/g, "");
 				decodedkey = parseInt(decodedkey2);
-			//	krnTrace("KETETE: " + decodedkey2);
+
 				//only care about directory data
 				if (decodedkey <= 77 && decodedkey >= 0)
 				{
+					//get the data portion
 					data = localStorage[key];
 					var datasize = data.length;
 					data2 = data.substring(8,datasize);
-					
-				//	krnTrace("DATA2: " + data2);
-				//	krnTrace("ARGS: " + filearg);
+
+					//check to make sure the file exists
 					if (data2 == filearg)
 						{
 						filekey = data.substring(2,7);
-						//krnTrace("FILEKEY: " + filekey);
+
+						//decode the key
 						decodedkey2 = filekey.replace(/\]|\[|,/g, "");
 						decodedkey = parseInt(decodedkey2);
-						//filekey = "[" + filekey;
-						//filekey = filekey + "]";
-						//krnTrace("FILEKEY: " + filekey);
-						//krnTrace("FILEKEYsd: " + decodedkey2);
-						//finaldata = localStorage[filekey];
-						//datasize = finaldata.length;
-						//finaldata = finaldata.substring(8,datasize);
-						
-						//prepare the new value to be written
 
-						//decodedkey2 = nextblock.replace(/\]|\[|,/g, "");
-						//decodedkey = parseInt(decodedkey2);
-						//decodedkey2 = decodedkey.toString();
+						//prepare what will be written
 						var t = decodedkey2[0];
 						var s = decodedkey2[1];
 						var b = decodedkey2[2];
@@ -342,14 +327,12 @@ function krnFSWrite(filearg,dataarg)
 						var s2 = s.toString();
 						var b2 = b.toString();
 						
-						//key = [t2, s2, b2];
-					//	krnTrace("HELLO");
 						//create the data for values
 						var exists = 1;
 						var track2 = t2;
 						var sector2 = s2;
 						var block2 = b2;
-						//60 ` for now? might need to change this.
+						//the data is what was entered
 						var data = dataarg;
 						
 						keyz = [t2, s2, b2];
@@ -358,8 +341,6 @@ function krnFSWrite(filearg,dataarg)
 						var e = exists.toString();
 						
 						value = [e, track2, sector2, block2, data];
-					
-					//	krnTrace("VALU: " + value);
 						
 						localStorage[keyz] = value;
 						
@@ -396,48 +377,45 @@ function krnFSDelete(args)
 		
 		for (key in localStorage)
 			{
-				//krnTrace("KETETE: " + key);
-				//decode key so we can use it
+				//decode the key
 				decodedkey = key.replace(/\]|\[|,/g, "");
 				decodedkey = parseInt(decodedkey);
 				
 				//only care about directory data
 				if (decodedkey <= 77 && decodedkey >= 0)
 				{
+					//get the data portion
 					data = localStorage[key];
 					var datasize = data.length;
 					data2 = data.substring(8,datasize);
 					
-					krnTrace("DATA2: " + data2);
-					krnTrace("ARGS: " + args);
+					//check to make sure the file exists
 					if (data2 == args)
 						{
 						
 						filekey = data.substring(2,7);
-
+						
+						//decode the key
 						decodedkey2 = filekey.replace(/\]|\[|,/g, "");
 						decodedkey = parseInt(decodedkey2);
 						
+						
+						//prepare what will be written (nothing)
 						var t = decodedkey2[0];
 						var s = decodedkey2[1];
 						var b = decodedkey2[2];
 						
-						//krnTrace("T: " + t);
-						//krnTrace("S: " + s);
-						//krnTrace("B: " + b);
 						
 						var t2 = t.toString();
 						var s2 = s.toString();
 						var b2 = b.toString();
-						
-						//key = [t2, s2, b2];
-						//krnTrace("HELLO");
+
 						//create the data for values
 						var exists = 0;
 						var track2 = -1;
 						var sector2 = -1;
 						var block2 = -1;
-						//60 ` for now? might need to change this.
+						//60 ` for now
 						var data = "````````````````````````````````````````````````````````````";
 						
 						keyz = [t2, s2, b2];
@@ -446,8 +424,6 @@ function krnFSDelete(args)
 						var e = exists.toString();
 						
 						value = [e, track2, sector2, block2, data];
-					
-						krnTrace("VALU: " + value);
 						
 						localStorage[keyz] = value;
 						localStorage[key] = value;
@@ -475,6 +451,7 @@ function krnFSLS()
 {
 	try
 	{
+		//declare vars
 		var decodedkey;
 		var data;
 		var data2;
@@ -485,7 +462,6 @@ function krnFSLS()
 		
 		for (key in localStorage)
 			{
-				//krnTrace("KETETE: " + key);
 				//decode key so we can use it
 				decodedkey = key.replace(/\]|\[|,/g, "");
 				decodedkey = parseInt(decodedkey);
@@ -493,25 +469,19 @@ function krnFSLS()
 				//only care about directory data
 				if (decodedkey <= 77 && decodedkey >= 0)
 				{
+					//get the data portion
 					data = localStorage[key];
 					var datasize = data.length;
 					data2 = data.substring(8,datasize);
 					exists = data[0];
-					//krnTrace("DATA2: " + data2);
-					//krnTrace("ARGS: " + args);
+
+					//checking if the file exists
 					if (exists == 1)
 						{
-						filekey = data.substring(2,7);
-						//filekey = "[" + filekey;
-						//filekey = filekey + "]";
-						//krnTrace("FILEKEY: " + filekey);
-						krnTrace("HELLO");
+
+						//if so, add it to the list
 						list.push(data2);
-						
-						//finaldata = localStorage[filekey];
-						//datasize = finaldata.length;
-						//finaldata = finaldata.substring(8,datasize);
-						
+
 						}
 				
 					
@@ -536,14 +506,15 @@ function krnFSGetNextEmptyBlock()
 			//decode the key so we can use it
 			decodedkey = key.replace(/\]|\[|,/g, "");
 			decodedkey = parseInt(decodedkey);
+			
 			//make sure this is a file
-			//krnTrace("KEY: " + key);
 			if (decodedkey <= 400 && decodedkey >= 100)
 			{
-				//krnTrace("IM INNNNNNNNNNNNN");
+				
 				helddata = localStorage[key];
 				exists = helddata[0];
 				
+				//make sure there is no file here
 				if (exists == 0)
 					{
 						return(key);
@@ -571,6 +542,7 @@ function krnFSGetNextEmptyDirectoryBlock()
 				helddata = localStorage[key];
 				exists = helddata[0];
 				
+				//make sure there is no file here
 				if (exists == 0)
 					{
 						return(key);
@@ -596,9 +568,8 @@ function krnFSCreateDisplay()
 	var blockcount = 0;
 	var line;
 
-	//krnTrace("LEN: " + localStorage.length);
 	
-
+	//export the FS line by line
 	while (i <= localStorage.length-2)
 		{
 			var trackcount2 = trackcount.toString();
@@ -608,13 +579,11 @@ function krnFSCreateDisplay()
 			keycount = [trackcount2, sectorcount2, blockcount2];
 			
 			var datdata = localStorage[keycount];
-			//datdata = datdata.replace(/(\r\n|\n|\r)/gm,"");
-			//console.log(datdata);
-			
+
 			line = "[" + trackcount + ",     " + sectorcount + ",     " + blockcount + "]  :  " + datdata;
-			//console.log("LINE: " + line);
+
 			fsDisplay.innerHTML = fsDisplay.innerHTML + "<div>" + line + "</div>";
-			//fsDisplay.innerHTML = fsDisplay.innerHTML + "<div>" + "-"+ "</div>";
+
 			blockcount++;
 			if (blockcount > 7)
 				{
