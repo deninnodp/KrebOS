@@ -1039,7 +1039,19 @@ function shellFormat()
 
 function shellLS()
 {
+	var list = krnFileSystemDriver.ls();
 	
+	if (list != null)
+		{
+			for (i in list)
+				{
+				_StdIn.putText(list[i]);
+	    		_StdIn.advanceLine();
+				}
+		}else{
+			_StdIn.putText("No directories to list.");
+    		_StdIn.advanceLine();
+		}
 }
 
 

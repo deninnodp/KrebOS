@@ -473,7 +473,56 @@ function krnFSDelete(args)
 
 function krnFSLS()
 {
-	
+	try
+	{
+		var decodedkey;
+		var data;
+		var data2;
+		var filekey;
+		var finaldata;
+		var exists;
+		var list = new Array();
+		
+		for (key in localStorage)
+			{
+				//krnTrace("KETETE: " + key);
+				//decode key so we can use it
+				decodedkey = key.replace(/\]|\[|,/g, "");
+				decodedkey = parseInt(decodedkey);
+				
+				//only care about directory data
+				if (decodedkey <= 77 && decodedkey >= 0)
+				{
+					data = localStorage[key];
+					var datasize = data.length;
+					data2 = data.substring(8,datasize);
+					exists = data[0];
+					//krnTrace("DATA2: " + data2);
+					//krnTrace("ARGS: " + args);
+					if (exists == 1)
+						{
+						filekey = data.substring(2,7);
+						//filekey = "[" + filekey;
+						//filekey = filekey + "]";
+						//krnTrace("FILEKEY: " + filekey);
+						krnTrace("HELLO");
+						list.push(data2);
+						
+						//finaldata = localStorage[filekey];
+						//datasize = finaldata.length;
+						//finaldata = finaldata.substring(8,datasize);
+						
+						}
+				
+					
+				}
+			}
+		return list;
+	}
+	catch(e)
+	{
+		return null;
+	}
 }
 
 function krnFSGetNextEmptyBlock()
