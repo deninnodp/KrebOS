@@ -32,7 +32,7 @@ function mainMemInit() {
 function mainSetMem(args, base) {
 
 	base = parseInt(base, 10);
-
+	//krnTrace("MOTOTOO: " + args);
 	var argsArray = args.split(' ');
 
 	for (x in argsArray) {

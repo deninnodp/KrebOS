@@ -33,6 +33,7 @@ function DeviceDriverFileSystem()
     this.createDisplay = krnFSCreateDisplay;
     this.getBlock = krnFSGetNextEmptyBlock;
     this.getDirectoryBlock = krnFSGetNextEmptyDirectoryBlock;
+    this.storeProgram = krnFSStoreProgram;
     	
 }
 
@@ -600,6 +601,17 @@ function krnFSCreateDisplay()
 
 	
 	
+}
+
+function krnFSStoreProgram(program, pid)
+{
+	
+	var filename = "process" + pid;
+	//krnTrace("PROC " + filename);
+	var success = krnFSCreate(filename);
+	//krnTrace("HELLO");
+	var success2 = krnFSWrite(filename,program);
+	//krnTrace("HELLO");
 }
 
 

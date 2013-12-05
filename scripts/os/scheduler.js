@@ -40,6 +40,10 @@ function scheduler()
 						        	_stateDisplay2.innerHTML = "READY";
 						        	_baseDisplay2.innerHTML = _current_pcb.base;
 						        	_limitDisplay2.innerHTML = _current_pcb.limit;
+					    		}else if (_current_pcb.pid == "3"){
+						        	_stateDisplay3.innerHTML = "READY";
+						        	_baseDisplay3.innerHTML = _current_pcb.base;
+						        	_limitDisplay3.innerHTML = _current_pcb.limit;
 					    		}
 								//_current_pcb.update("READY", _cpu.PC, _cpu.Acc, _cpu.Xreg, _cpu.Yreg, _cpu.Zflag, _current_pcb.base, _current_pcb.limit);
 								_readyqueue.push(_current_pcb);

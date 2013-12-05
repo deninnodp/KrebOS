@@ -596,23 +596,48 @@ function shellLoad(args)
 			    		_StdIn.putText("Program Valid. Loading...");
 			    		_StdIn.advanceLine();
 			    		//set PID
-		
-			    		if (pid_next == 3)
+			    	//	krnTrace("PIDaaa " + pid_next);
+			    		if (pid_next == 4)
 			    			{
 			    				pid_next = 0;
 			    			}
 			    		
 			    		current_pid = pid_next;
-			    		krnTrace("PID" + current_pid);
+//			    		krnTrace("PID " + current_pid);
 			    		//current_pid = args;
-		
-			    		_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
-			    		_current_pcb = _program_queue[current_pid];
-		
-			    		//store that bad boy in memory!
-			    		_memManagement.storeProgram(input, current_pid);
+			    			if (current_pid == 0)
+			    			{
+			    				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0, true, false);
+					    		_current_pcb = _program_queue[current_pid];
+					    		_current_pcb.priority = args;
+					    		//store that bad boy in memory!
+					    		_memManagement.storeProgram(input, current_pid);
+			    			}else if (current_pid == 1)
+			    			{
+			    				_program_queue[current_pid] = new pcb(0,current_pid,0,256,511,0, true, false);
+					    		_current_pcb = _program_queue[current_pid];
+					    		_current_pcb.priority = args;
+					    		//store that bad boy in memory!
+					    		_memManagement.storeProgram(input, current_pid);
+			    			}else if (current_pid == 2)
+			    			{
+			    				_program_queue[current_pid] = new pcb(0,current_pid,0,512,767,0, true, false);
+					    		_current_pcb = _program_queue[current_pid];
+					    		_current_pcb.priority = args;
+					    		//store that bad boy in memory!
+					    		_memManagement.storeProgram(input, current_pid);
+			    			}else if (current_pid == 3)
+			    			{
+			    				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0, false, true);
+					    		_current_pcb = _program_queue[current_pid];
+					    		_current_pcb.priority = args;
+					    		//store that bad boy in memory!
+					    		//_memManagement.storeProgram(input, current_pid);
+					    		krnFileSystemDriver.storeProgram(input, current_pid);
+			    			}
+
 			    		//update registers on load (basically all 0)
-			    		_current_pcb.priority = args;
+	
 			    		_pcDisplay.innerHTML=_current_pcb.pc;
 			    		_accDisplay.innerHTML=_current_pcb.acc;
 			    		_xDisplay.innerHTML=_current_pcb.x;
@@ -663,7 +688,7 @@ function shellLoad(args)
 				_StdIn.advanceLine();
 				//set PID
 				
-				if (pid_next == 3)
+				if (pid_next == 4)
 				{
 				pid_next = 0;
 				}
@@ -672,13 +697,39 @@ function shellLoad(args)
 				krnTrace("PID" + current_pid);
 				//current_pid = args;
 				
-				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0);
-				_current_pcb = _program_queue[current_pid];
+    			if (current_pid == 0)
+    			{
+    				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0, true, false);
+		    		_current_pcb = _program_queue[current_pid];
+		    		_current_pcb.priority = 2;
+		    		//store that bad boy in memory!
+		    		_memManagement.storeProgram(input, current_pid);
+    			}else if (current_pid == 1)
+    			{
+    				_program_queue[current_pid] = new pcb(0,current_pid,0,256,511,0, true, false);
+		    		_current_pcb = _program_queue[current_pid];
+		    		_current_pcb.priority = 2;
+		    		//store that bad boy in memory!
+		    		_memManagement.storeProgram(input, current_pid);
+    			}else if (current_pid == 2)
+    			{
+    				_program_queue[current_pid] = new pcb(0,current_pid,0,512,767,0, true, false);
+		    		_current_pcb = _program_queue[current_pid];
+		    		_current_pcb.priority = 2;
+		    		//store that bad boy in memory!
+		    		_memManagement.storeProgram(input, current_pid);
+    			}else if (current_pid == 3)
+    			{
+    				_program_queue[current_pid] = new pcb(0,current_pid,0,0,255,0, false, true);
+		    		_current_pcb = _program_queue[current_pid];
+		    		_current_pcb.priority = 2;
+		    		//store that bad boy in memory!
+		    		//_memManagement.storeProgram(input, current_pid);
+		    		krnFileSystemDriver.storeProgram(input, current_pid);
+    			}
 				
-				//store that bad boy in memory!
-				_memManagement.storeProgram(input, current_pid);
 				//update registers on load (basically all 0)
-				_current_pcb.priority = 2;
+				//_current_pcb.priority = 2;
 				_pcDisplay.innerHTML=_current_pcb.pc;
 				_accDisplay.innerHTML=_current_pcb.acc;
 				_xDisplay.innerHTML=_current_pcb.x;
@@ -705,6 +756,8 @@ function shellRun(args)
 			{
 				_current_pcb = _program_queue[args[0]];
 				//_current_pcb.state = "RUNNING";
+				
+				
 				_readyqueue.push(_current_pcb);
 				//krnTrace(_readyqueue[0].state);
 				_cpu.exec(); // LETS DO THIS LEEEEROOOOOYYYY JENKINSSSSSSS (run)
@@ -749,6 +802,17 @@ function shellRunAll()
 				_current_pcb.base = "512";
 				_current_pcb.limit = "767";
 				_current_pcb.pid = 2;
+				_current_pcb.display();
+				_readyqueue.push(_current_pcb);
+			}
+			
+			if (_program_queue[3] != null)
+			{
+				_current_pcb = _program_queue[3];
+				_current_pcb.state = "READY";
+				_current_pcb.base = "0";
+				_current_pcb.limit = "255";
+				_current_pcb.pid = 3;
 				_current_pcb.display();
 				_readyqueue.push(_current_pcb);
 			}

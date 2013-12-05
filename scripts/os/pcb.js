@@ -5,7 +5,7 @@
 */
 
 
-function pcb(state, pid, pc, base, limit, priority)
+function pcb(state, pid, pc, base, limit, priority, memory, disk)
 {
     //members
     this.state = state;
@@ -14,8 +14,8 @@ function pcb(state, pid, pc, base, limit, priority)
     this.base = base;
     this.limit = limit;
 	this.priority = priority;
-	this.inMemory = true; //all newly created pcb for procs will be in memory by default.
-	
+	this.inMemory = memory; //all newly created pcb for procs will be in memory by default.
+	this.onDisk = disk;
     //initialize the registers to 0 since upon initial creation, the state isn't being saved into the pcb
     this.acc = 0;
     this.x = 0;
@@ -25,7 +25,7 @@ function pcb(state, pid, pc, base, limit, priority)
     //functions
     
     //will update a pcb object with given values
-    this.update = function(state, pc, acc, x, y, z, base, limit) {
+    this.update = function(state, pc, acc, x, y, z, base, limit, memory, disk) {
         this.pc = pc;
         this.acc = acc;
         this.x = x;
@@ -34,6 +34,8 @@ function pcb(state, pid, pc, base, limit, priority)
         this.z = z;
         this.base = base;
         this.limit = limit;
+        this.inMemory = memory;
+        this.onDisk = disk;
     };
     
     this.display = function()
@@ -68,6 +70,15 @@ function pcb(state, pid, pc, base, limit, priority)
 	        	_xDisplay2.innerHTML = this.x;
 	        	_yDisplay2.innerHTML = this.y;
 	        	_zDisplay2.innerHTML = this.z;
+    		}else if (this.pid == 3){
+	        	_stateDisplay3.innerHTML = this.state;
+	        	_baseDisplay3.innerHTML = this.base;
+	        	_limitDisplay3.innerHTML = this.limit;
+	        	_pcDisplay3.innerHTML = this.pc;
+	        	_accDisplay3.innerHTML = this.acc;
+	        	_xDisplay3.innerHTML = this.x;
+	        	_yDisplay3.innerHTML = this.y;
+	        	_zDisplay3.innerHTML = this.z;
     		}
     	
 

@@ -72,6 +72,12 @@ function krnBootstrap() // Page 8.
 	_yDisplay2 = document.getElementById("tdY2");
 	_zDisplay2 = document.getElementById("tdZ2");
 	
+	_pcDisplay3 = document.getElementById("tdPC3");
+	_accDisplay3 = document.getElementById("tdACC3");
+	_xDisplay3 = document.getElementById("tdX3");
+	_yDisplay3 = document.getElementById("tdY3");
+	_zDisplay3 = document.getElementById("tdZ3");
+	
 	_stateDisplay0 = document.getElementById("tdSTATE0");
 	_baseDisplay0 = document.getElementById("tdBASE0");
 	_limitDisplay0 = document.getElementById("tdLIMIT0");
@@ -83,6 +89,10 @@ function krnBootstrap() // Page 8.
 	_stateDisplay2 = document.getElementById("tdSTATE2");
 	_baseDisplay2 = document.getElementById("tdBASE2");
 	_limitDisplay2 = document.getElementById("tdLIMIT2");
+	
+	_stateDisplay3 = document.getElementById("tdSTATE3");
+	_baseDisplay3 = document.getElementById("tdBASE3");
+	_limitDisplay3 = document.getElementById("tdLIMIT3");
 
 	// Load the Keyboard Device Driver
 	krnTrace("Loading the keyboard device driver.");

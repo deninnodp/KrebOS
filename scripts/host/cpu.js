@@ -112,22 +112,28 @@ function cpu() {
 			}else
 				{
 
-		
-		_current_pcb = _readyqueue.shift();
-		
-		
-		this.pcb = _current_pcb;
-		
-		krnTrace("yo " + this.pcb.pid);
-
-		
-				this.pcb.state = "RUNNING";
-		start_location = _memManagement.getPC();
-
-		// get first instruction
-		instruction = _memManagement.getAddress(start_location);
-
-		_cpu.isExecuting = true;
+					if (_readyqueue[0].inMemory == false && _readyqueue[0].onDisk == true)
+					{
+						var swapee = _readyqueue.length - 1;
+						var swapee2 = swapee;
+						swapee = _readyqueue[swapee].pid;
+						_memManagement.swap(_readyqueue[0].pid,swapee,0,swapee2);
+					}
+					_current_pcb = _readyqueue.shift();
+					
+					
+					this.pcb = _current_pcb;
+					
+					krnTrace("yo " + this.pcb.pid);
+			
+					
+							this.pcb.state = "RUNNING";
+					start_location = _memManagement.getPC();
+			
+					// get first instruction
+					instruction = _memManagement.getAddress(start_location);
+			
+					_cpu.isExecuting = true;
 		
 				}
 
