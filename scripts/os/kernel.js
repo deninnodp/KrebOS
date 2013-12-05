@@ -283,7 +283,7 @@ function krnHandleSystemCall() {
 		
 		
 		var mem_loca = parseInt(startaddress, 16);
-		
+
 	//	krnTrace("mem_loca: " + mem_loca);
 		var string = "";
 		

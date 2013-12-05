@@ -51,6 +51,8 @@ function mainSetMem(args, base) {
 function mainMemDisplay() {
 	//alert("inside display");
 
+	
+	
 	var mainMemDisplay = document.getElementById("mainMemDisplay");
 	mainMemDisplay.innerHTML = ""; //clear it out
 

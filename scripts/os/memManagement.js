@@ -16,7 +16,6 @@ function memManagement() {
 	this.getPC = memManagementGetPC;
 	this.getAddress2 = memManagementGetAddress2;
 	this.swap = memManagementSwap;
-
 }
 
 function memManagementGetAddress(args) {
@@ -37,17 +36,20 @@ function memManagementGetAddress2(args) {
 	if (_current_pcb.base == 0)
 		{
 			addressindex = args;
-	//		krnTrace("HOOOO " + addressindex);
+			//krnTrace("HOOOO " + addressindex);
+			//krnTrace("HOOOO " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.base == 256)
 		{
-			addressindex = args + 256;
-	//		krnTrace("HOOOO1 " + addressindex);
+			addressindex = args;
+			//krnTrace("HOOOO1 " + addressindex);
+			//krnTrace("HOOOO1 " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
 		}else if (_current_pcb.base == 512)
 		{
-			addressindex = args + 512;
-	//		krnTrace("HOOOO2 " + addressindex);
+			addressindex = args;
+			//krnTrace("HOOOO2 " + addressindex);
+			//krnTrace("HOOOO2 " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
 		}
 
@@ -66,6 +68,22 @@ function memManagementStoreProgram(input, pid) {
 	}else if (_current_pcb.base == 512){
 		_mainMem.set(input, "0512");
 	}
+	
+}
+	
+function memManagementStoreProgram2(input, pid) {
+		
+		
+		if (pid == 0)
+		{
+			_mainMem.set(input, "0000");
+
+		}else if (pid == 1){
+
+			_mainMem.set(input, "0256");
+		}else if (pid == 2){
+			_mainMem.set(input, "0512");
+		}
 
 }
 
@@ -80,6 +98,7 @@ function memManagementGetPC() {
 
 function memManagementSwap(p1,p2,r1,r2)
 {
+	//memManagementFix();
 	//p1 is on disk, p2 is going onto the disk
 	if (_readyqueue[r2].base == 0)
 		{
@@ -93,7 +112,7 @@ function memManagementSwap(p1,p2,r1,r2)
 				{
 					program = program + memManagementGetAddress(i) + " ";
 				}
-			krnTrace("LOOOOOK " + name);
+			//krnTrace("LOOOOOK " + program);
 			krnFileSystemDriver.storeProgram(program, p2);
 			tomem = krnFileSystemDriver.read(name);
 			
@@ -115,7 +134,7 @@ function memManagementSwap(p1,p2,r1,r2)
 				{
 					program = program + memManagementGetAddress(i) + " ";
 				}
-			krnTrace("LOOOOOK " + name);
+			//krnTrace("LOOOOOK " + program);
 			krnFileSystemDriver.storeProgram(program, p2);
 			tomem = krnFileSystemDriver.read(name);
 			
@@ -136,7 +155,7 @@ function memManagementSwap(p1,p2,r1,r2)
 				{
 					program = program + memManagementGetAddress(i) + " ";
 				}
-			krnTrace("LOOOOOK " + name);
+			//krnTrace("LOOOOOK " + program);
 			krnFileSystemDriver.storeProgram(program, p2);
 			tomem = krnFileSystemDriver.read(name);
 			
@@ -148,3 +167,4 @@ function memManagementSwap(p1,p2,r1,r2)
 		}
 	
 }
+
