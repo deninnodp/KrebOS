@@ -32,7 +32,7 @@ function mainMemInit() {
 function mainSetMem(args, base) {
 
 	base = parseInt(base, 10);
-
+	//krnTrace("MOTOTOO: " + args);
 	var argsArray = args.split(' ');
 
 	for (x in argsArray) {
@@ -51,6 +51,8 @@ function mainSetMem(args, base) {
 function mainMemDisplay() {
 	//alert("inside display");
 
+	
+	
 	var mainMemDisplay = document.getElementById("mainMemDisplay");
 	mainMemDisplay.innerHTML = ""; //clear it out
 

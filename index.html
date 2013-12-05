@@ -33,13 +33,14 @@
    <script type="text/javascript" src="scripts/os/scheduler.js"></script>
    <script type="text/javascript" src="scripts/os/kernel.js"></script>
    
+ 
 
    <!-- Other Routines -->
    <script type="text/javascript" src="scripts/utils.js"></script>
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
 </head>
 
-<body onload="hostInit();">
+<body id="bodyid" style="width:2000px" onload="hostInit();">
 
 <div id="divMain" style="width:100%;">
 
@@ -197,6 +198,27 @@
 				<th class="cpuLogLabel">Z</th>
 					<td id="tdZ2">&nbsp;</td>
 					</tr>
+					
+			<tr>		
+				<th class="pcbLogLabel">Process3:</th>
+					<td id="tdblah3">&nbsp;</td>
+				<th class="pcbLogLabel">STATE3</th>
+					<td id="tdSTATE3">&nbsp;</td>
+				<th class="pcbLogLabel">BASE3</th>
+					<td id="tdBASE3">&nbsp;</td>
+				<th class="pcbLogLabel">LIMIT3</th>
+					<td id="tdLIMIT3">&nbsp;</td>
+				<th class="cpuLogLabel">PC</th>
+					<td id="tdPC3">&nbsp;</td>
+					<th class="cpuLogLabel">ACC</th>
+					<td id="tdACC3">&nbsp;</td>
+				<th class="cpuLogLabel">X</th>
+					<td id="tdX3">&nbsp;</td>
+				<th class="cpuLogLabel">Y</th>
+					<td id="tdY3">&nbsp;</td>	
+				<th class="cpuLogLabel">Z</th>
+					<td id="tdZ3">&nbsp;</td>
+					</tr>
 		</tr>
 			
 			
@@ -312,7 +334,7 @@
 		
 	</div>
    
-   <div name="fileSystemDisplay" id="fileSystemDisplay" class="fileSystemDisplay" style="width:500px;height:600px;line-height:3em;overflow:scroll;float:left;line-height:150%">
+   <div name="fileSystemDisplay" id="fileSystemDisplay" class="fileSystemDisplay" style="width:400px;height:600px;line-height:3em;overflow:scroll;float:left;line-height:150%">
    	
 
 		       <b> FILE SYSTEM </b>

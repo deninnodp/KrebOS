@@ -56,7 +56,7 @@ function cpu() {
 		
 		if (_scheduler.executionmode == "PRIORITY")
 			{
-				krnTrace("sup");
+			//	krnTrace("sup");
 				//krnTrace(_readyqueue.length);
 				var bestchoice = 999999999;
 				var finalchoice = 0;
@@ -93,41 +93,46 @@ function cpu() {
 				
 				_current_pcb = _readyqueue.shift();
 				
-				krnTrace("yogsssssssdfg " + _current_pcb.pid);
+			//	krnTrace("yogsssssssdfg " + _current_pcb.pid);
 				
 				this.pcb = _current_pcb;
 				
-				krnTrace("yogdfg " + this.pcb.pid);
+				//krnTrace("yogdfg " + this.pcb.pid);
 
 				
 						this.pcb.state = "RUNNING";
 				start_location = _memManagement.getPC();
 
 				// get first instruction
-				instruction = _memManagement.getAddress(start_location);
+				instruction = _memManagement.getAddress2(start_location);
 				daflag = true;
 				_cpu.isExecuting = true;
 				
 			
 			}else
 				{
-
-		
-		_current_pcb = _readyqueue.shift();
-		
-		
-		this.pcb = _current_pcb;
-		
-		krnTrace("yo " + this.pcb.pid);
-
-		
-				this.pcb.state = "RUNNING";
-		start_location = _memManagement.getPC();
-
-		// get first instruction
-		instruction = _memManagement.getAddress(start_location);
-
-		_cpu.isExecuting = true;
+					if (_readyqueue[0].inMemory == false && _readyqueue[0].onDisk == true)
+					{
+						var swapee = _readyqueue.length - 1;
+						var swapee2 = swapee;
+						swapee = _readyqueue[swapee].pid;
+						_memManagement.swap(_readyqueue[0].pid,swapee,0,swapee2);
+					}
+					_current_pcb = _readyqueue.shift();
+					
+					
+					this.pcb = _current_pcb;
+					
+			//		krnTrace("yo " + this.pcb.pid);
+			
+					
+							this.pcb.state = "RUNNING";
+					start_location = _memManagement.getPC();
+			
+					// get first instruction
+					instruction = _memManagement.getAddress2(start_location);
+			
+					_cpu.isExecuting = true;
 		
 				}
 
@@ -232,7 +237,7 @@ function cpu() {
 		} else if (instruction == "A9") {
 			// A9 means take next value and store in accum.
 
-			var strConst = _memManagement.getAddress(current_pc + 1);
+			var strConst = _memManagement.getAddress2(current_pc + 1);
 
 			krnTrace("CNST " + strConst);
 		/*	if (strConst == "4F" || strConst == "4E") {
@@ -255,7 +260,7 @@ function cpu() {
 			// var current_pc = this.pcb.program_counter;
 
 			// swap the locations - little n-dian
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 		//	krnTrace("woop " + location);
 			var mem_loc = parseInt(location, 16); // get hex value
 		//	krnTrace("woop2 " + mem_loc);
@@ -276,7 +281,7 @@ function cpu() {
 			// var current_pc = this.pcb.program_counter;
 
 			// swap the locations - little n-dian
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 
 			var mem_loc = parseInt(location, 16); // get hex value
 			mem_loc = mem_loc + _current_pcb.base;
@@ -290,7 +295,7 @@ function cpu() {
 			// var current_pc = this.pcb.program_counter;
 
 			// swap the locations - little n-dian
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
 			mem_loc = mem_loc + _current_pcb.base;
 			// alert(this.memory[mem_loc] + " " + this.pcb.accum);
@@ -302,7 +307,7 @@ function cpu() {
 			// check to load x with constant
 		} else if (instruction == "A2") {
 
-			var strConst = _memManagement.getAddress(current_pc + 1);
+			var strConst = _memManagement.getAddress2(current_pc + 1);
 
 			var value = parseInt(strConst, 16);
 
@@ -317,7 +322,7 @@ function cpu() {
 
 			// var current_pc = this.pcb.program_counter;
 
-			var strConst = _memManagement.getAddress(current_pc + 1);
+			var strConst = _memManagement.getAddress2(current_pc + 1);
 
 			var value = parseInt(strConst, 10);
 			//krnTrace("my dad " + strConst);
@@ -330,7 +335,7 @@ function cpu() {
 			// load y reg from mem
 		} else if (instruction == "AC") {
 
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
 			//krnTrace("my dad " + mem_loc);
 			mem_loc = mem_loc + _current_pcb.base;
@@ -344,7 +349,7 @@ function cpu() {
 			// var current_pc = this.pcb.program_counter;
 
 			// swap the locations - little n-dian
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 			var mem_loc = parseInt(location, 16);
 			mem_loc = mem_loc + _current_pcb.base;
 			this.pcb.xreg = _mainMem.Memory[mem_loc];
@@ -364,7 +369,7 @@ function cpu() {
 			//krnTrace("WE GOT D0 " + this.pcb.Zflag);
 			if (this.pcb.Zflag == 0) //if z register is 0 then set pc to given location
 			{
-				var location = _memManagement.getAddress(current_pc + 1); //_memManagement.getAddress(current_pc + 2) +
+				var location = _memManagement.getAddress2(current_pc + 1); //_memManagement.getAddress2(current_pc + 2) +
 				//krnTrace("loc " + location);
 				var mem_loc = parseInt(location, 16);
 				//	krnTrace("memloc " + mem_loc);
@@ -391,7 +396,7 @@ function cpu() {
 			}
 
 		} else if (instruction == "EE") {
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 			var mem_loc = parseInt(location, 16); // get hex value
 			mem_loc = mem_loc + _current_pcb.base;
 			var memByte = _mainMem.Memory[mem_loc];
@@ -401,7 +406,7 @@ function cpu() {
 			current_pc +=2;
 
 		} else if (instruction == "EC") {
-			var location = _memManagement.getAddress(current_pc + 2) + _memManagement.getAddress(current_pc + 1);
+			var location = _memManagement.getAddress2(current_pc + 2) + _memManagement.getAddress2(current_pc + 1);
 
 			var mem_loc = parseInt(location, 16); // get hex value
 			//krnTrace("memloc " + )
@@ -425,7 +430,7 @@ function cpu() {
 			this.pcb.pc++;
 			current_pc++;
 			var current_location = _memManagement.getPC();
-			instruction = _memManagement.getAddress(current_location);
+			instruction = _memManagement.getAddress2(current_location);
 			_tickcount++;
 			_current_pcb = this.pcb;
 			//_current_pcb.update(this.state, this.PC, this.Acc, this.Xreg, this.Yreg, this.Zflag, _current_pcb.base, _current_pcb.limit);

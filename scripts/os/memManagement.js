@@ -15,29 +15,17 @@ function memManagement() {
 	this.getAddress = memManagementGetAddress;
 	this.getPC = memManagementGetPC;
 	this.getAddress2 = memManagementGetAddress2;
-
+	this.swap = memManagementSwap;
 }
 
 function memManagementGetAddress(args) {
 
 	var addressindex;
-	
-	if (_current_pcb.pid == 0)
-		{
+
 			addressindex = args;
 		//	krnTrace("HOOOOA " + addressindex);
 			return (_mainMem.Memory[addressindex]);
-		}else if (_current_pcb.pid == 1)
-		{
-			addressindex = args;
-	//		krnTrace("HOOOOA1 " + addressindex);
-			return (_mainMem.Memory[addressindex]);
-		}else if (_current_pcb.pid == 2)
-		{
-			addressindex = args;
-//		krnTrace("HOOOOA2 " + addressindex);
-			return (_mainMem.Memory[addressindex]);
-		}
+
 
 }
 
@@ -45,20 +33,23 @@ function memManagementGetAddress2(args) {
 
 	var addressindex;
 	
-	if (_current_pcb.pid == 0)
+	if (_current_pcb.base == 0)
 		{
 			addressindex = args;
-	//		krnTrace("HOOOO " + addressindex);
+			//krnTrace("HOOOO " + addressindex);
+			//krnTrace("HOOOO " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
-		}else if (_current_pcb.pid == 1)
+		}else if (_current_pcb.base == 256)
 		{
-			addressindex = args + 256;
-	//		krnTrace("HOOOO1 " + addressindex);
+			addressindex = args;
+			//krnTrace("HOOOO1 " + addressindex);
+			//krnTrace("HOOOO1 " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
-		}else if (_current_pcb.pid == 2)
+		}else if (_current_pcb.base == 512)
 		{
-			addressindex = args + 512;
-	//		krnTrace("HOOOO2 " + addressindex);
+			addressindex = args;
+			//krnTrace("HOOOO2 " + addressindex);
+			//krnTrace("HOOOO2 " + _mainMem.Memory[addressindex]);
 			return (_mainMem.Memory[addressindex]);
 		}
 
@@ -67,16 +58,32 @@ function memManagementGetAddress2(args) {
 function memManagementStoreProgram(input, pid) {
 	
 	
-	if (pid == 0)
+	if (_current_pcb.base == 0)
 	{
 		_mainMem.set(input, "0000");
 
-	}else if (pid == 1){
+	}else if (_current_pcb.base == 256){
 
 		_mainMem.set(input, "0256");
-	}else if (pid == 2){
+	}else if (_current_pcb.base == 512){
 		_mainMem.set(input, "0512");
 	}
+	
+}
+	
+function memManagementStoreProgram2(input, pid) {
+		
+		
+		if (pid == 0)
+		{
+			_mainMem.set(input, "0000");
+
+		}else if (pid == 1){
+
+			_mainMem.set(input, "0256");
+		}else if (pid == 2){
+			_mainMem.set(input, "0512");
+		}
 
 }
 
@@ -87,3 +94,77 @@ function memManagementGetPC() {
 	return (output);
 
 }
+
+
+function memManagementSwap(p1,p2,r1,r2)
+{
+	//memManagementFix();
+	//p1 is on disk, p2 is going onto the disk
+	if (_readyqueue[r2].base == 0)
+		{
+			var program = "";
+			var tomem;
+			var name = "process" + p1;
+			//var tempbase;
+			//var templimit;
+			
+			for (var i=0;i<255;i++)
+				{
+					program = program + memManagementGetAddress(i) + " ";
+				}
+			//krnTrace("LOOOOOK " + program);
+			krnFileSystemDriver.storeProgram(program, p2);
+			tomem = krnFileSystemDriver.read(name);
+			
+			_readyqueue[r1].base = _readyqueue[r2].base;
+			_readyqueue[r1].limit = _readyqueue[r2].limit;
+			
+			memManagementStoreProgram(tomem, p1);
+			
+			
+		}else if (_readyqueue[r2].base == 256)
+		{
+			var program = "";
+			var tomem;
+			var name = "process" + p1;
+			//var tempbase;
+			//var templimit;
+			
+			for (var i=256;i<511;i++)
+				{
+					program = program + memManagementGetAddress(i) + " ";
+				}
+			//krnTrace("LOOOOOK " + program);
+			krnFileSystemDriver.storeProgram(program, p2);
+			tomem = krnFileSystemDriver.read(name);
+			
+			_readyqueue[r1].base = _readyqueue[r2].base;
+			_readyqueue[r1].limit = _readyqueue[r2].limit;
+			
+			memManagementStoreProgram(tomem, p1);
+			
+		}else if (_readyqueue[r2].base == 512)
+		{
+			var program = "";
+			var tomem;
+			var name = "process" + p1;
+			//var tempbase;
+			//var templimit;
+			
+			for (var i=512;i<767;i++)
+				{
+					program = program + memManagementGetAddress(i) + " ";
+				}
+			//krnTrace("LOOOOOK " + program);
+			krnFileSystemDriver.storeProgram(program, p2);
+			tomem = krnFileSystemDriver.read(name);
+			
+			_readyqueue[r1].base = _readyqueue[r2].base;
+			_readyqueue[r1].limit = _readyqueue[r2].limit;
+			
+			memManagementStoreProgram(tomem, p1);
+			
+		}
+	
+}
+
